@@ -1,8 +1,11 @@
 import React from 'react';
 import Home from './pages/home';
+import themeStyleWrapper from '../lib/styling';
 
-export default class App extends React.Component {
-  render() {
-    return <Home />;
-  }
+export default function App() {
+  return (
+    <themeStyleWrapper>
+      <Home />
+    </themeStyleWrapper>
+  );
 }
