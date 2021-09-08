@@ -14,8 +14,8 @@ const theme = createTheme({
     background: {
       default: '#fff'
     },
-    shape: {
-      borderRadius: '8px'
+    error: {
+      main: '#DB5461'
     }
   }
 });
