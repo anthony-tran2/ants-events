@@ -14,9 +14,18 @@ const useStyles = makeStyles(theme => (
 export default function FormInput(props) {
   const classes = useStyles();
 
+  const selectType = () => {
+    if (props.id === 'date') {
+      return 'date';
+    } else if (props.id === 'time') {
+      return 'time';
+    } else return 'text';
+  };
+
   return (
     <Grid item xs={12}>
       <TextField
+        type={selectType()}
         error={props.id === 'origin' ? false : props.anError}
         required={props.id !== 'origin'}
         onChange={props.handleChange}
@@ -27,6 +36,7 @@ export default function FormInput(props) {
         id={props.id}
         value={props.value}
         className={classes.root}
+        placeholder=''
       />
     </Grid>
   );

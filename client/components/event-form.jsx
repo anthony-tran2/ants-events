@@ -75,6 +75,14 @@ export default function EventForm() {
       setDestinationError(true);
     }
     if (title && description && time && date && destination) {
+      // const timestamp = {};
+      // const init = {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: { title, description, timestamp, origin, destination }
+      // }
       setTitle('');
       setDescription('');
       setTime('');
