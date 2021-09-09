@@ -1,8 +1,9 @@
 import { Button, Container, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { useState } from 'react';
-import FormInput from './text-field';
-import Map from './map';
+import FormInput from './text-field.jsx';
+import Map from './map.jsx';
+import AutocompleteComponent from './autocomplete.jsx';
 
 const useStyles = makeStyles(theme => (
   {
@@ -26,6 +27,35 @@ export default function EventForm() {
   const [timeError, setTimeError] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [destinationError, setDestinationError] = useState(false);
+  const [center, setCenter] = useState(
+    {
+      lat: 0,
+      lng: 0
+    }
+  );
+
+  const handleMapLoad = () => {
+    setCenter(
+      {
+        lat: 33.63512489483346,
+        lng: -117.74047007255454
+      }
+    );
+  };
+
+  const handlePlaceChanged = (target, autocomplete) => {
+    if (autocomplete !== null) {
+      if (target === 'destination') {
+        const newCenter = { ...center };
+        newCenter.lat = autocomplete.getPlace().geometry.location.lat();
+        newCenter.lng = autocomplete.getPlace().geometry.location.lng();
+        setCenter(newCenter);
+      }
+      target === 'origin'
+        ? setOrigin(autocomplete.getPlace().formatted_address)
+        : setDestination(autocomplete.getPlace().formatted_address);
+    }
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -116,12 +146,12 @@ export default function EventForm() {
             <FormInput anError={descriptionError} handleChange={handleChange} id="description" value={description}/>
             <FormInput anError={dateError} handleChange={handleChange} id="date" value={date} />
             <FormInput anError={timeError} handleChange={handleChange} id="time" value={time} />
-            <FormInput handleChange={handleChange} id="origin" value={origin} />
-            <FormInput anError={destinationError} handleChange={handleChange} id="destination" value={destination} />
+            <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} handleChange={handleChange} id="origin" value={origin} />
+            <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} anError={destinationError} handleChange={handleChange} id="destination" value={destination} />
         </Grid>
         <Grid item container spacing={3} xs={12} sm={6}>
           <Grid item xs={12}>
-            <Map />
+            <Map center={center} handleLoad={handleMapLoad}/>
           </Grid>
         </Grid>
       <Grid item xs={12} container justifyContent='center'>
