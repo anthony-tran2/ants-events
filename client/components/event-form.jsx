@@ -34,6 +34,7 @@ export default function EventForm() {
       lng: 0
     }
   );
+  const [marker, setMarker] = useState(null);
 
   const handleMapLoad = () => {
     setCenter(
@@ -51,6 +52,7 @@ export default function EventForm() {
         newCenter.lat = autocomplete.getPlace().geometry.location.lat();
         newCenter.lng = autocomplete.getPlace().geometry.location.lng();
         setCenter(newCenter);
+        setMarker(newCenter);
       }
       target === 'origin'
         ? setOrigin(autocomplete.getPlace().formatted_address)
@@ -130,6 +132,7 @@ export default function EventForm() {
         setDateError(true);
       } else if (attribute === 'destination') {
         setDestinationError(true);
+        setMarker(null);
       }
     } else {
       if (attribute === 'title') {
@@ -142,6 +145,7 @@ export default function EventForm() {
         setDateError(false);
       } else if (attribute === 'destination') {
         setDestinationError(false);
+        setMarker(null);
       }
     }
   };
@@ -165,7 +169,7 @@ export default function EventForm() {
         </Grid>
         <Grid item container spacing={3} xs={12} sm={6}>
           <Grid item xs={12}>
-            <Map center={center} handleLoad={handleMapLoad}/>
+            <Map marker={marker} center={center} handleLoad={handleMapLoad}/>
           </Grid>
         </Grid>
       <Grid item xs={12} container justifyContent='center'>
