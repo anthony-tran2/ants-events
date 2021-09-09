@@ -2,6 +2,7 @@ import { Button, Container, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { useState } from 'react';
 import FormInput from './text-field';
+import Map from './map';
 
 const useStyles = makeStyles(theme => (
   {
@@ -120,13 +121,16 @@ export default function EventForm() {
         </Grid>
         <Grid item container spacing={3} xs={12} sm={6}>
           <Grid item xs={12}>
+            <Map />
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container justifyContent='center'>
+      <Grid item xs={12} container justifyContent='center'>
+        <Grid item>
           <Button type='submit' variant="contained" color="primary">
             SUBMIT
           </Button>
+        </Grid>
+      </Grid>
       </Grid>
     </form>
     </Container>
