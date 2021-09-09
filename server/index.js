@@ -26,12 +26,6 @@ app.post('/api/events', (req, res, next) => {
           returning *;
   `;
   const params = [title, description, timestamp, origin, destination, notification, email, userId];
-  params.map(value => {
-    if (!value && value !== notification) {
-      if (value === origin || value === email) return null;
-    }
-    return value;
-  });
   db.query(sql, params)
     .then(result => {
       res.status(200).json(result.rows[0]);
