@@ -36,6 +36,9 @@ export default function FormInput(props) {
         id={props.id}
         value={props.value}
         className={classes.root}
+        InputLabelProps={{
+          shrink: true
+        }}
         placeholder=''
       />
     </Grid>

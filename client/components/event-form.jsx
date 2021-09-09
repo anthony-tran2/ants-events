@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
+const { zonedTimeToUtc } = require('date-fns-tz');
 
 const useStyles = makeStyles(theme => (
   {
@@ -75,25 +76,30 @@ export default function EventForm() {
       setDestinationError(true);
     }
     if (title && description && time && date && destination) {
-      // const timestamp = {};
-      // const init = {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: { title, description, timestamp, origin, destination }
-      // }
-      setTitle('');
-      setDescription('');
-      setTime('');
-      setDate('');
-      setOrigin('');
-      setDestination('');
-      setTitleError(false);
-      setDescriptionError(false);
-      setTimeError(false);
-      setDateError(false);
-      setDestinationError(false);
+      const zonedDate = `${date} ${time}:00`;
+      const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
+      const init = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title, description, timestamp, origin, destination })
+      };
+      fetch('/api/events', init)
+        .then(() => {
+          setTitle('');
+          setDescription('');
+          setTime('');
+          setDate('');
+          setOrigin('');
+          setDestination('');
+          setTitleError(false);
+          setDescriptionError(false);
+          setTimeError(false);
+          setDateError(false);
+          setDestinationError(false);
+        })
+        .catch(err => console.error(err));
     }
 
   };
