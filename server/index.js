@@ -33,6 +33,51 @@ app.post('/api/events', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/events', (req, res, next) => {
+  const sql = `
+    select "eventId",
+           "title",
+           "description",
+           "timestamp",
+           "origin",
+           "destination"
+      from "events"
+     where "userId" = $1
+  `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      const eventList = result.rows.map(value => value);
+      res.status(200).json(eventList);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/events/:eventId', (req, res, next) => {
+  const eventId = parseInt(req.params.eventId, 10);
+  if (!eventId) {
+    throw new ClientError(400, 'eventId must be a positive integer');
+  }
+  const sql = `
+    select "eventId",
+           "title",
+           "description",
+           "timestamp",
+           "origin",
+           "destination"
+      from "events"
+     where "userId" = $1 AND
+           "eventId" = $2
+  `;
+  const params = [userId, eventId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
+      res.status(200).json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
