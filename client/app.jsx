@@ -1,7 +1,9 @@
 import React from 'react';
-import Home from './pages/home';
+// import CreateEvent from './pages/create-event-page.jsx';
+import Home from './pages/home.jsx';
 import { ThemeProvider } from '@material-ui/styles';
 import { createTheme } from '@material-ui/core';
+import Header from './components/toolbar';
 
 const theme = createTheme({
   palette: {
@@ -23,6 +25,7 @@ const theme = createTheme({
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
+      <Header />
       <Home />
     </ThemeProvider>
   );

@@ -1,20 +1,9 @@
-import { Button, Container, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Button, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
 const { zonedTimeToUtc } = require('date-fns-tz');
-
-const useStyles = makeStyles(theme => (
-  {
-    heading: {
-      fontSize: '2.5rem',
-      fontWeight: '300',
-      marginTop: '0.35em'
-    }
-  }
-));
 
 export default function EventForm() {
   const [title, setTitle] = useState('');
@@ -150,13 +139,7 @@ export default function EventForm() {
     }
   };
 
-  const classes = useStyles();
-
   return (
-    <Container maxWidth="lg" >
-      <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading}>
-        Create An Event
-      </Typography>
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <Grid container spacing={2} justifyContent='center'>
         <Grid item xs={12} sm={6} container spacing={3}>
@@ -181,6 +164,5 @@ export default function EventForm() {
       </Grid>
       </Grid>
     </form>
-    </Container>
   );
 }
