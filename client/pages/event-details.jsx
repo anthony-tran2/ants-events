@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import React, { useEffect, useState } from 'react';
 import BackButton from '../components/back-button';
 import Map from '../components/map';
-import { utcToZonedTime } from 'date-fns-tz';
+import timestampConversion from '../lib/date-and-time-conversion';
 
 const useStyles = makeStyles(theme => (
   {
@@ -60,18 +60,7 @@ export default function EventDetails(props) {
   const render = () => {
     if (!event) return null;
     const { title, description, timestamp, origin, destination } = event;
-    const newDate = new Date(timestamp);
-    const zonedDate = `${utcToZonedTime(newDate, Intl.DateTimeFormat().resolvedOptions().timeZone)}`;
-    const dateArray = zonedDate.split(' ');
-    const date = `${dateArray[0]} ${dateArray[1]} ${dateArray[2]} ${dateArray[3]}`;
-    const firstTwo = parseInt(dateArray[4][0] + dateArray[4][1]);
-    const rest = dateArray[4].slice(2, 3);
-    let time = null;
-    if (firstTwo > 12) {
-      time = `${firstTwo - 12}${rest} a.m.`;
-    } else if (firstTwo === 0) {
-      time = `${dateArray[4].slice(0, 5)} a.m.`;
-    } else time = `${dateArray[4].slice(0, 5)} p.m.`;
+    const newTimestamp = timestampConversion(timestamp);
     return (
       <>
       <main>
@@ -94,10 +83,10 @@ export default function EventDetails(props) {
                             {description}
                           </Typography>
                           <Typography className={classes.spacingtext} color="secondary">
-                              <span className={classes.bold}>Date: </span><span>{date}</span>
+                              <span className={classes.bold}>Date: </span><span>{newTimestamp.date}</span>
                           </Typography>
                           <Typography className={classes.spacingtext} color="secondary">
-                            <span className={classes.bold}>Time: </span><span>{time}</span>
+                            <span className={classes.bold}>Time: </span><span>{newTimestamp.time}</span>
                           </Typography>
                           <Typography className={classes.spacingtext} color="secondary">
                             <span className={classes.bold}>Origin: </span><span>{origin}</span>
