@@ -8,7 +8,7 @@ import { utcToZonedTime } from 'date-fns-tz';
 const useStyles = makeStyles(theme => (
   {
     heading: {
-      fontSize: '2.5rem',
+      fontSize: '1.7rem',
       fontWeight: '300',
       marginTop: '0.35em'
     },
@@ -87,7 +87,7 @@ export default function EventDetails(props) {
                     <CardContent>
                       <Grid container>
                         <Grid item xs={12} sm={6}>
-                          <Typography omponent="h1" variant="h4" align="center" className={classes.heading} color="textPrimary" gutterBottom>
+                          <Typography component="h1" variant="h6" align="center" className={classes.heading} color="textPrimary" gutterBottom>
                           {title}
                           </Typography>
                           <Typography className={classes.spacingtext} color="secondary">
