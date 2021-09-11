@@ -1,12 +1,18 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 export default function BackButton() {
   return (
     <a href='#'>
-      <Button variant="text" color="secondary">
-        BACK
-      </Button>
+      <Grid container alignItems='center'>
+        <Grid item>
+          <Button variant="text" color="secondary">
+            <ArrowBackIosIcon />
+            <u>BACK</u>
+          </Button>
+        </Grid>
+      </Grid>
     </a>
   );
 }
