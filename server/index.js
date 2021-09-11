@@ -79,6 +79,24 @@ app.get('/api/events/:eventId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/search/:keyword', (req, res, next) => {
+  const keyword = req.params.keyword;
+  const sql = `
+    select "eventId",
+           "title",
+           "description"
+      from "events"
+     where "userId" = $1 AND
+           "title" ILIKE $2
+  `;
+  const params = [userId, `%${keyword}%`];
+  db.query(sql, params)
+    .then(result => {
+      res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
