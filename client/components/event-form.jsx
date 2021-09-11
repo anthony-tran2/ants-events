@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
-const { zonedTimeToUtc } = require('date-fns-tz');
+import { zonedTimeToUtc } from 'date-fns-tz';
 
 export default function EventForm() {
   const [title, setTitle] = useState('');
@@ -12,6 +12,8 @@ export default function EventForm() {
   const [date, setDate] = useState('');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
+  const [originCoords, setOriginCoords] = useState(null);
+  const [destinationCoords, setDestinationCoords] = useState(null);
   const [titleError, setTitleError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const [timeError, setTimeError] = useState(false);
@@ -36,16 +38,19 @@ export default function EventForm() {
 
   const handlePlaceChanged = (target, autocomplete) => {
     if (autocomplete !== null) {
+      const newCenter = { ...center };
+      newCenter.lat = autocomplete.getPlace().geometry.location.lat();
+      newCenter.lng = autocomplete.getPlace().geometry.location.lng();
       if (target === 'destination') {
-        const newCenter = { ...center };
-        newCenter.lat = autocomplete.getPlace().geometry.location.lat();
-        newCenter.lng = autocomplete.getPlace().geometry.location.lng();
         setCenter(newCenter);
         setMarker(newCenter);
+        setDestinationCoords(newCenter);
+        setDestination(autocomplete.getPlace().formatted_address);
       }
-      target === 'origin'
-        ? setOrigin(autocomplete.getPlace().formatted_address)
-        : setDestination(autocomplete.getPlace().formatted_address);
+      if (target === 'origin') {
+        setOrigin(autocomplete.getPlace().formatted_address);
+        setOriginCoords(newCenter);
+      }
     }
   };
 
@@ -67,6 +72,7 @@ export default function EventForm() {
       setDestinationError(true);
     }
     if (title && description && time && date && destination) {
+      const coords = { originCoords, destinationCoords };
       const zonedDate = `${date} ${time}:00`;
       const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
       const init = {
@@ -74,7 +80,7 @@ export default function EventForm() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title, description, timestamp, origin, destination })
+        body: JSON.stringify({ title, description, timestamp, origin, destination, coords })
       };
       fetch('/api/events', init)
         .then(() => {
@@ -84,6 +90,8 @@ export default function EventForm() {
           setDate('');
           setOrigin('');
           setDestination('');
+          setOriginCoords(null);
+          setDestinationCoords(null);
           setTitleError(false);
           setDescriptionError(false);
           setTimeError(false);

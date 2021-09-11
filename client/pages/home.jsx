@@ -12,8 +12,8 @@ const useStyles = makeStyles(theme => (
     },
 
     cardgrid: {
-      paddingTop: theme.spacing(8),
-      paddingBottom: theme.spacing(8)
+      paddingTop: theme.spacing(4),
+      paddingBottom: theme.spacing(4)
     },
 
     card: {
@@ -56,15 +56,15 @@ export default function Home(props) {
           Your Events
         </Typography>
         <Grid container justifyContent='center'>
-          <a>
+          <a href='#create-events'>
             <Button variant="contained" color="primary">
               CREATE AN EVENT
             </Button>
           </a>
         </Grid>
           {eventList &&
-            <Grid container spacing={4} className={classes.heading}>
-              {eventList.map(event => <SmallEventCard key={event.eventId} title={event.title} description={event.description} />)}
+            <Grid container spacing={4} className={classes.cardgrid}>
+              {eventList.map(event => <SmallEventCard key={event.eventId} eventId={event.eventId} title={event.title} description={event.description} />)}
             </Grid>
           }
       </Container>

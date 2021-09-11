@@ -5,28 +5,18 @@ import LinesEllipsis from 'react-lines-ellipsis';
 
 const useStyles = makeStyles(theme => (
   {
-    cardgrid: {
-      paddingTop: theme.spacing(8),
-      paddingBottom: theme.spacing(8)
-    },
-
     card: {
-      height: '11rem',
-      display: 'flex',
-      flexDirection: 'column'
+      height: '11rem'
     },
 
     cardContent: {
-      flexGrow: 1,
-      maxHeight: '8rem'
+      height: '7.25rem'
     },
 
     ellipsis: {
       color: theme.palette.primary.main,
       fontSize: '1rem',
-      fontWeight: '400',
-      lineHeight: '1.5',
-      letterSpacing: '0.00938rem'
+      fontWeight: '400'
     }
   }
 ));
@@ -50,11 +40,15 @@ export default function SmallEventCard(props) {
           />
         </CardContent>
         <CardActions>
-          <a>
-            <Button size="small" color="primary">
-              View
-            </Button>
-          </a>
+          <Grid container>
+            <Grid item>
+              <a href={`#events?eventId=${props.eventId}`}>
+                <Button size="small" color="primary">
+                  View
+                </Button>
+              </a>
+            </Grid>
+          </Grid>
         </CardActions>
       </Card>
     </Grid>
