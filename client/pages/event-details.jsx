@@ -57,11 +57,10 @@ export default function EventDetails(props) {
 
   const classes = useStyles();
 
-  const render = () => {
-    if (!event) return null;
-    const { title, description, timestamp, origin, destination } = event;
-    const newTimestamp = timestampConversion(timestamp);
-    return (
+  if (!event) return null;
+  const { title, description, timestamp, origin, destination } = event;
+  const newTimestamp = timestampConversion(timestamp);
+  return (
       <>
       <main>
         <Container maxWidth="lg">
@@ -108,8 +107,5 @@ export default function EventDetails(props) {
         </Container>
       </main>
       </>
-    );
-  };
-
-  return render();
+  );
 }

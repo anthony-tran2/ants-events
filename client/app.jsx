@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CreateEvent from './pages/create-event-page.jsx';
 import Home from './pages/home.jsx';
 import { ThemeProvider } from '@material-ui/styles';
@@ -28,9 +28,11 @@ const theme = createTheme({
 export default function App() {
   const [route, setRoute] = useState(parseRoute(window.location.hash));
 
-  window.addEventListener('hashchange', () => {
-    setRoute(parseRoute(window.location.hash));
-  });
+  useEffect(() => {
+    window.addEventListener('hashchange', () => {
+      setRoute(parseRoute(window.location.hash));
+    });
+  }, []);
 
   const renderPage = () => {
     if (route.path === '') {

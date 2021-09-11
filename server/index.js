@@ -48,8 +48,7 @@ app.get('/api/events', (req, res, next) => {
   const params = [userId];
   db.query(sql, params)
     .then(result => {
-      const eventList = result.rows.map(value => value);
-      res.status(200).json(eventList);
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
