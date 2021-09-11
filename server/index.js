@@ -14,20 +14,66 @@ app.use(staticMiddleware);
 app.use(jsonMiddleware);
 
 app.post('/api/events', (req, res, next) => {
-  const { title, description, timestamp, origin, destination, email } = req.body;
+  const { title, description, timestamp, origin, destination, email, coords } = req.body;
 
-  if (!title || !description || !timestamp || !destination) {
-    throw new ClientError(400, 'title, description, timestamp, destination are all required inputs');
+  if (!title || !description || !timestamp || !destination || !coords) {
+    throw new ClientError(400, 'title, description, timestamp, destination, coords are all required inputs');
   }
 
   const sql = `
-    insert into "events" ("title", "description", "timestamp", "origin", "destination", "notification", "email", "userId")
-          values ($1, $2, $3, $4, $5, $6, $7, $8)
+    insert into "events" ("title", "description", "timestamp", "origin", "destination", "notification", "email", "userId", "coords")
+          values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
           returning *;
   `;
-  const params = [title, description, timestamp, origin, destination, notification, email, userId];
+  const params = [title, description, timestamp, origin, destination, notification, email, userId, coords];
   db.query(sql, params)
     .then(result => {
+      res.status(200).json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/events', (req, res, next) => {
+  const sql = `
+    select "eventId",
+           "title",
+           "description",
+           "timestamp",
+           "origin",
+           "destination",
+           "coords"
+      from "events"
+     where "userId" = $1
+  `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/events/:eventId', (req, res, next) => {
+  const eventId = parseInt(req.params.eventId, 10);
+  if (!eventId) {
+    throw new ClientError(400, 'eventId must be a positive integer');
+  }
+  const sql = `
+    select "eventId",
+           "title",
+           "description",
+           "timestamp",
+           "origin",
+           "destination",
+           "coords"
+      from "events"
+     where "userId" = $1 AND
+           "eventId" = $2
+  `;
+  const params = [userId, eventId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
       res.status(200).json(result.rows[0]);
     })
     .catch(err => next(err));

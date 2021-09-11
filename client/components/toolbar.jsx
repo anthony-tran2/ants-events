@@ -17,9 +17,11 @@ export default function Header() {
       <AppBar position="static">
         <Toolbar>
           <TodayIcon className={classes.icon} />
+          <a href='#'>
           <Typography variant="h4" color="inherit" noWrap>
             Ant&apos;s Events
           </Typography>
+          </a>
         </Toolbar>
       </AppBar>
     </>

@@ -25,6 +25,7 @@ CREATE TABLE "public"."events" (
 	"notification" BOOLEAN NOT NULL,
 	"email" TEXT,
 	"userId" integer,
+  "coords" json NOT NULL,
 	CONSTRAINT "events_pk" PRIMARY KEY ("eventId")
 ) WITH (
   OIDS=FALSE

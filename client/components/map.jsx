@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const libraries = ['places'];
 
@@ -22,6 +22,10 @@ export default function Map(props) {
         center={props.center}
         zoom={17}
       >
+        {
+          props.marker &&
+          <Marker position={props.marker} />
+        }
       </GoogleMap>
     </LoadScript>
   );
