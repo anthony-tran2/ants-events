@@ -54,7 +54,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Header />
+      <Header route={route.path} />
       {renderPage()}
     </ThemeProvider>
   );
