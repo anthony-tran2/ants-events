@@ -7,25 +7,26 @@ const staticMiddleware = require('./static-middleware');
 
 const app = express();
 const jsonMiddleware = express.json();
-const notification = false;
+const notification = true;
+const email = 'grimmerravenn@gmail.com';
 const userId = 1;
 
 app.use(staticMiddleware);
 app.use(jsonMiddleware);
 
 app.post('/api/events', (req, res, next) => {
-  const { title, description, timestamp, origin, destination, email, coords } = req.body;
+  const { title, description, timestamp, origin, destination, coords } = req.body;
 
   if (!title || !description || !timestamp || !destination || !coords) {
     throw new ClientError(400, 'title, description, timestamp, destination, coords are all required inputs');
   }
 
   const sql = `
-    insert into "events" ("title", "description", "timestamp", "origin", "destination", "notification", "email", "userId", "coords")
-          values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    insert into "events" ("title", "description", "timestamp", "origin", "destination", "notification", "sent", "email", "userId", "coords")
+          values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
           returning *;
   `;
-  const params = [title, description, timestamp, origin, destination, notification, email, userId, coords];
+  const params = [title, description, timestamp, origin, destination, notification, 'false', email, userId, coords];
   db.query(sql, params)
     .then(result => {
       res.status(200).json(result.rows[0]);

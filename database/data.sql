@@ -9,6 +9,6 @@ values ('Coding Bootcamp',
 '9200 Irvine Center Dr #200, Irvine, CA 92618',
 'true',
 'false',
-'example@example.com',
+'grimmerravenn@gmail.com',
 1,
 '{"originCoords":{"lat":33.8823476,"lng":-117.8851033},"destinationCoords":{"lat":33.6348748,"lng":-117.7404808}}');
