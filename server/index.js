@@ -40,7 +40,9 @@ app.get('/api/events', (req, res, next) => {
            "timestamp",
            "origin",
            "destination",
-           "coords"
+           "coords",
+           "notification",
+           "email"
       from "events"
      where "userId" = $1
   `;
@@ -64,7 +66,9 @@ app.get('/api/events/:eventId', (req, res, next) => {
            "timestamp",
            "origin",
            "destination",
-           "coords"
+           "coords",
+           "notification",
+           "email"
       from "events"
      where "userId" = $1 AND
            "eventId" = $2
@@ -83,7 +87,13 @@ app.get('/api/search/:keyword', (req, res, next) => {
   const sql = `
     select "eventId",
            "title",
-           "description"
+           "description",
+           "timestamp",
+           "origin",
+           "destination",
+           "coords",
+           "notification",
+           "email"
       from "events"
      where "userId" = $1 AND
            "title" ILIKE $2
