@@ -1,4 +1,5 @@
 import { Grid, makeStyles, TextField } from '@material-ui/core';
+import { format } from 'date-fns';
 import React from 'react';
 
 const useStyles = makeStyles(theme => (
@@ -22,6 +23,14 @@ export default function FormInput(props) {
     } else return 'text';
   };
 
+  const selectMin = () => {
+    if (props.id === 'date') {
+      return { min: format(new Date(), 'yyyy-MM-dd') };
+    } else if (props.id === 'time') {
+      return { min: format(new Date(), 'HH:mm') };
+    }
+  };
+
   return (
     <Grid item xs={12}>
       <TextField
@@ -40,6 +49,7 @@ export default function FormInput(props) {
           shrink: true
         }}
         placeholder=''
+        inputProps={selectMin()}
       />
     </Grid>
   );
