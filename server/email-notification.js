@@ -8,6 +8,11 @@ const { utcToZonedTime } = require('date-fns-tz');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+const checkTime = time => {
+  if (time === '6 hours' || time === '5 hours' || time === '4 hours' || time === '3 hours' || time === '2 hours' || time === '1 hours' || time === '0 hours') return true;
+  return false;
+};
+
 const todayUTC = zonedTimeToUtc(format(new Date(), 'yyyy-MM-dd HH'), Intl.DateTimeFormat().resolvedOptions().timeZone);
 const sql = `
     select "title",
@@ -27,7 +32,7 @@ db.query(sql, params)
   .then(result => {
     const { rows } = result;
     const eventList = rows.filter(event => {
-      if (formatDistanceStrict(event.timestamp, todayUTC, { unit: 'hour' }) === '6 hours' && !event.sent) return true;
+      if (checkTime(formatDistanceStrict(event.timestamp, todayUTC, { unit: 'hour' })) && !event.sent) return true;
       return false;
     });
     eventList.forEach(event => {
