@@ -23,6 +23,7 @@ CREATE TABLE "public"."events" (
 	"origin" TEXT,
 	"destination" TEXT NOT NULL,
 	"notification" BOOLEAN NOT NULL,
+  "sent" BOOLEAN NOT NULL,
 	"email" TEXT,
 	"userId" integer,
   "coords" json NOT NULL,
