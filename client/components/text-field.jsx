@@ -20,6 +20,8 @@ export default function FormInput(props) {
       return 'date';
     } else if (props.id === 'time') {
       return 'time';
+    } else if (props.id === 'email') {
+      return 'email';
     } else return 'text';
   };
 

@@ -1,17 +1,34 @@
-import { Button, Grid } from '@material-ui/core';
+import { Button, FormControlLabel, Grid, Switch, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
 import { zonedTimeToUtc } from 'date-fns-tz';
 
+const useStyles = makeStyles(theme => ({
+  switch: {
+    height: '3.5rem'
+  },
+
+  height: {
+    height: '25rem'
+  },
+
+  height2: {
+    height: '20rem'
+  }
+}));
+
 export default function EventForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
+  const [on, setOn] = useState(false);
+  const [email, setEmail] = useState('');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
+  const [emailError, setEmailError] = useState(null);
   const [originCoords, setOriginCoords] = useState(null);
   const [destinationCoords, setDestinationCoords] = useState(null);
   const [titleError, setTitleError] = useState(false);
@@ -26,6 +43,7 @@ export default function EventForm() {
     }
   );
   const [marker, setMarker] = useState(null);
+  const classes = useStyles();
 
   const handleMapLoad = () => {
     setCenter(
@@ -71,6 +89,9 @@ export default function EventForm() {
     if (destination === '') {
       setDestinationError(true);
     }
+    if (on && email === '') {
+      setEmailError(true);
+    }
     if (title && description && time && date && destination) {
       const coords = { originCoords, destinationCoords };
       const zonedDate = `${date} ${time}:00`;
@@ -80,7 +101,7 @@ export default function EventForm() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title, description, timestamp, origin, destination, coords })
+        body: JSON.stringify({ title, description, timestamp, origin, destination, coords, email, notification: on })
       };
       fetch('/api/events', init)
         .then(() => {
@@ -88,11 +109,14 @@ export default function EventForm() {
           setDescription('');
           setTime('');
           setDate('');
+          setEmail('');
           setOrigin('');
           setDestination('');
           setOriginCoords(null);
           setDestinationCoords(null);
           setTitleError(false);
+          setEmailError(false);
+          setOn(false);
           setDescriptionError(false);
           setTimeError(false);
           setDateError(false);
@@ -117,6 +141,8 @@ export default function EventForm() {
       setOrigin(e.target.value);
     } else if (attribute === 'destination') {
       setDestination(e.target.value);
+    } else if (attribute === 'email') {
+      setEmail(e.target.value);
     }
     if (e.target.value === '') {
       if (attribute === 'title') {
@@ -125,6 +151,8 @@ export default function EventForm() {
         setDescriptionError(true);
       } else if (attribute === 'time') {
         setTimeError(true);
+      } else if (attribute === 'email') {
+        setEmailError(true);
       } else if (attribute === 'date') {
         setDateError(true);
       } else if (attribute === 'destination') {
@@ -134,6 +162,8 @@ export default function EventForm() {
     } else {
       if (attribute === 'title') {
         setTitleError(false);
+      } else if (attribute === 'email') {
+        setEmailError(false);
       } else if (attribute === 'description') {
         setDescriptionError(false);
       } else if (attribute === 'time') {
@@ -158,10 +188,21 @@ export default function EventForm() {
             <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} handleChange={handleChange} id="origin" value={origin} />
             <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} anError={destinationError} handleChange={handleChange} id="destination" value={destination} />
         </Grid>
-        <Grid item container spacing={3} xs={12} sm={6}>
-          <Grid item xs={12}>
+        <Grid item container alignContent="space-between" spacing={3} xs={12} sm={6}>
+          <Grid item xs={12} className={on ? classes.height2 : classes.height}>
             <Map marker={marker} center={center} handleLoad={handleMapLoad}/>
           </Grid>
+          <Grid item xs={12}>
+            <FormControlLabel className={classes.switch}
+              control={<Switch checked={on} onChange={() => setOn(!on)} />}
+              label="Normal"
+              labelPlacement="start"
+            />
+          </Grid>
+          {on &&
+            <Grid item xs={12}>
+              <FormInput anError={emailError} handleChange={handleChange} id="email" value={email} />
+            </Grid>}
         </Grid>
       <Grid item xs={12} container justifyContent='center'>
         <Grid item>

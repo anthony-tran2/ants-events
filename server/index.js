@@ -7,15 +7,13 @@ const staticMiddleware = require('./static-middleware');
 
 const app = express();
 const jsonMiddleware = express.json();
-const notification = true;
-const email = 'grimmerravenn@gmail.com';
 const userId = 1;
 
 app.use(staticMiddleware);
 app.use(jsonMiddleware);
 
 app.post('/api/events', (req, res, next) => {
-  const { title, description, timestamp, origin, destination, coords } = req.body;
+  const { title, description, timestamp, origin, destination, coords, notification, email } = req.body;
 
   if (!title || !description || !timestamp || !destination || !coords) {
     throw new ClientError(400, 'title, description, timestamp, destination, coords are all required inputs');
