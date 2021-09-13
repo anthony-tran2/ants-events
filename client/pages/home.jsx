@@ -25,14 +25,6 @@ const useStyles = makeStyles(theme => (
     cardContent: {
       flexGrow: 1,
       maxHeight: '8rem'
-    },
-
-    ellipsis: {
-      color: theme.palette.primary.main,
-      fontSize: '1rem',
-      fontWeight: '400',
-      lineHeight: '1.5',
-      letterSpacing: '0.00938rem'
     }
   }
 ));

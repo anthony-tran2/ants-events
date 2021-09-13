@@ -7,6 +7,7 @@ import Header from './components/toolbar';
 import parseRoute from './lib/parse-route.js';
 import NotFound from './pages/not-found.jsx';
 import EventDetails from './pages/event-details.jsx';
+import SearchPage from './pages/search.jsx';
 
 const theme = createTheme({
   palette: {
@@ -45,12 +46,15 @@ export default function App() {
     if (route.path === 'create-events') {
       return <CreateEvent />;
     }
+    if (route.path === 'search') {
+      return <SearchPage />;
+    }
     return <NotFound />;
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Header />
+      <Header route={route.path} />
       {renderPage()}
     </ThemeProvider>
   );
