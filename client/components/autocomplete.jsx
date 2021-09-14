@@ -23,7 +23,7 @@ export default function AutocompleteComponent(props) {
       onLoad={autoLoad}
       onPlaceChanged={() => props.handlePlaceChanged(props.id, autocomplete)}
     >
-      <FormInput id={props.id} anError={props.anError} handleChange={props.handleChange} value={props.value} />
+          <FormInput initial={props.initial} setInitial={props.setInitial} id={props.id} anError={props.anError} handleChange={props.handleChange} value={props.value} />
     </Autocomplete>
     </LoadScript>
     </Grid>

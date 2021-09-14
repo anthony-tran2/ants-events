@@ -1,6 +1,6 @@
 import { Grid, makeStyles, TextField } from '@material-ui/core';
 import { format } from 'date-fns';
-import React, { useState } from 'react';
+import React from 'react';
 
 const useStyles = makeStyles(theme => (
   {
@@ -13,7 +13,6 @@ const useStyles = makeStyles(theme => (
 ));
 
 export default function FormInput(props) {
-  const [initial, setInitial] = useState(true);
   const classes = useStyles();
 
   const selectType = () => {
@@ -38,10 +37,9 @@ export default function FormInput(props) {
     <Grid item xs={12}>
       <TextField
         type={selectType()}
-        error={props.id !== 'origin' && props.value === '' && !initial}
         required={props.id !== 'origin'}
         onChange={e => {
-          if (initial) setInitial(false);
+          if (props.initial) props.setInitial(false);
           props.handleChange(e);
         }}
         fullWidth
