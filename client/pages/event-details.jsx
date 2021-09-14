@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import BackButton from '../components/back-button';
 import Map from '../components/map';
 import timestampConversion from '../lib/date-and-time-conversion';
+import CheckIcon from '@material-ui/icons/Check';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
 
 const useStyles = makeStyles(theme => (
   {
@@ -58,7 +60,7 @@ export default function EventDetails(props) {
   const classes = useStyles();
 
   if (!event) return null;
-  const { title, description, timestamp, origin, destination } = event;
+  const { title, description, timestamp, origin, destination, notification, email } = event;
   const newTimestamp = timestampConversion(timestamp);
   return (
       <>
@@ -74,7 +76,7 @@ export default function EventDetails(props) {
                   <Grid item xs={12}>
                     <CardContent>
                       <Grid container>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={6} container direction="column">
                           <Typography component="h1" variant="h6" align="center" className={classes.heading} color="textPrimary" gutterBottom>
                           {title}
                           </Typography>
@@ -87,12 +89,23 @@ export default function EventDetails(props) {
                           <Typography className={classes.spacingtext} color="secondary">
                             <span className={classes.bold}>Time: </span><span>{newTimestamp.time}</span>
                           </Typography>
+                          {origin &&
                           <Typography className={classes.spacingtext} color="secondary">
                             <span className={classes.bold}>Origin: </span><span>{origin}</span>
-                          </Typography>
+                          </Typography>}
                           <Typography className={classes.spacingtext} color="secondary">
                             <span className={classes.bold}>Destination: </span><span>{destination}</span>
                           </Typography>
+                          <Grid item container className={classes.spacingtext}>
+                              <Typography color="secondary">
+                                <span className={classes.bold}>Opted in for notification</span>
+                              </Typography>
+                            {notification ? <CheckIcon style={{ color: '#2EF72E' }} /> : <NotInterestedIcon style={{ color: '#DB5461' }}/>}
+                          </Grid>
+                          {notification &&
+                            <Typography className={classes.spacingtext} color="secondary">
+                              <span className={classes.bold}>Origin: </span><span>{email}</span>
+                            </Typography>}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <Map handleLoad={handleLoad} center={center} marker={marker} />

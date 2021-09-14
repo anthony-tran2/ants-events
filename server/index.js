@@ -7,25 +7,24 @@ const staticMiddleware = require('./static-middleware');
 
 const app = express();
 const jsonMiddleware = express.json();
-const notification = false;
 const userId = 1;
 
 app.use(staticMiddleware);
 app.use(jsonMiddleware);
 
 app.post('/api/events', (req, res, next) => {
-  const { title, description, timestamp, origin, destination, email, coords } = req.body;
+  const { title, description, timestamp, origin, destination, coords, notification, email } = req.body;
 
   if (!title || !description || !timestamp || !destination || !coords) {
     throw new ClientError(400, 'title, description, timestamp, destination, coords are all required inputs');
   }
 
   const sql = `
-    insert into "events" ("title", "description", "timestamp", "origin", "destination", "notification", "email", "userId", "coords")
-          values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    insert into "events" ("title", "description", "timestamp", "origin", "destination", "notification", "sent", "email", "userId", "coords")
+          values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
           returning *;
   `;
-  const params = [title, description, timestamp, origin, destination, notification, email, userId, coords];
+  const params = [title, description, timestamp, origin, destination, notification, 'false', email, userId, coords];
   db.query(sql, params)
     .then(result => {
       res.status(200).json(result.rows[0]);
@@ -41,7 +40,9 @@ app.get('/api/events', (req, res, next) => {
            "timestamp",
            "origin",
            "destination",
-           "coords"
+           "coords",
+           "notification",
+           "email"
       from "events"
      where "userId" = $1
   `;
@@ -65,7 +66,9 @@ app.get('/api/events/:eventId', (req, res, next) => {
            "timestamp",
            "origin",
            "destination",
-           "coords"
+           "coords",
+           "notification",
+           "email"
       from "events"
      where "userId" = $1 AND
            "eventId" = $2
@@ -84,7 +87,13 @@ app.get('/api/search/:keyword', (req, res, next) => {
   const sql = `
     select "eventId",
            "title",
-           "description"
+           "description",
+           "timestamp",
+           "origin",
+           "destination",
+           "coords",
+           "notification",
+           "email"
       from "events"
      where "userId" = $1 AND
            "title" ILIKE $2

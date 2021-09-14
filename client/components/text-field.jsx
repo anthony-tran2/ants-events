@@ -1,4 +1,5 @@
 import { Grid, makeStyles, TextField } from '@material-ui/core';
+import { format } from 'date-fns';
 import React from 'react';
 
 const useStyles = makeStyles(theme => (
@@ -19,16 +20,28 @@ export default function FormInput(props) {
       return 'date';
     } else if (props.id === 'time') {
       return 'time';
+    } else if (props.id === 'email') {
+      return 'email';
     } else return 'text';
+  };
+
+  const selectMin = () => {
+    if (props.id === 'date') {
+      return { min: format(new Date(), 'yyyy-MM-dd') };
+    } else if (props.id === 'time') {
+      return { min: format(new Date(), 'HH:mm') };
+    }
   };
 
   return (
     <Grid item xs={12}>
       <TextField
         type={selectType()}
-        error={props.id === 'origin' ? false : props.anError}
         required={props.id !== 'origin'}
-        onChange={props.handleChange}
+        onChange={e => {
+          if (props.initial) props.setInitial(false);
+          props.handleChange(e);
+        }}
         fullWidth
         label={props.id.split('').map((value, i) => i === 0 ? value.toUpperCase() : value).join('')}
         variant="outlined"
@@ -40,6 +53,7 @@ export default function FormInput(props) {
           shrink: true
         }}
         placeholder=''
+        inputProps={selectMin()}
       />
     </Grid>
   );
