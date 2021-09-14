@@ -121,7 +121,9 @@ export default function EventForm() {
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <Grid container spacing={2} justifyContent='center'>
         {error &&
-          <Typography style={{ color: '#DB5461' }}>Required inputs missing! Try again.</Typography>}
+          <Grid item xs={12}>
+            <Typography align='center' style={{ color: '#DB5461' }}>Required inputs missing! Try again.</Typography>
+          </Grid>}
         <Grid item xs={12} sm={6} container spacing={3}>
             <FormInput handleChange={handleChange} id="title" value={values.title}/>
             <FormInput handleChange={handleChange} id="description" value={values.description}/>
