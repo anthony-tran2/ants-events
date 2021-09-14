@@ -28,14 +28,8 @@ export default function EventForm() {
   const [email, setEmail] = useState('');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
-  const [emailError, setEmailError] = useState(null);
   const [originCoords, setOriginCoords] = useState(null);
   const [destinationCoords, setDestinationCoords] = useState(null);
-  const [titleError, setTitleError] = useState(false);
-  const [descriptionError, setDescriptionError] = useState(false);
-  const [timeError, setTimeError] = useState(false);
-  const [dateError, setDateError] = useState(false);
-  const [destinationError, setDestinationError] = useState(false);
   const [center, setCenter] = useState(
     {
       lat: 0,
@@ -74,24 +68,6 @@ export default function EventForm() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (title === '') {
-      setTitleError(true);
-    }
-    if (description === '') {
-      setDescriptionError(true);
-    }
-    if (time === '') {
-      setTimeError(true);
-    }
-    if (date === '') {
-      setDateError(true);
-    }
-    if (destination === '') {
-      setDestinationError(true);
-    }
-    if (on && email === '') {
-      setEmailError(true);
-    }
     if (title && description && time && date && destination) {
       const coords = { originCoords, destinationCoords };
       const zonedDate = `${date} ${time}:00`;
@@ -114,13 +90,7 @@ export default function EventForm() {
           setDestination('');
           setOriginCoords(null);
           setDestinationCoords(null);
-          setTitleError(false);
-          setEmailError(false);
           setOn(false);
-          setDescriptionError(false);
-          setTimeError(false);
-          setDateError(false);
-          setDestinationError(false);
         })
         .catch(err => console.error(err));
     }
@@ -145,35 +115,7 @@ export default function EventForm() {
       setEmail(e.target.value);
     }
     if (e.target.value === '') {
-      if (attribute === 'title') {
-        setTitleError(true);
-      } else if (attribute === 'description') {
-        setDescriptionError(true);
-      } else if (attribute === 'time') {
-        setTimeError(true);
-      } else if (attribute === 'email') {
-        setEmailError(true);
-      } else if (attribute === 'date') {
-        setDateError(true);
-      } else if (attribute === 'destination') {
-        setDestinationError(true);
-        setMarker(null);
-      }
-    } else {
-      if (attribute === 'title') {
-        setTitleError(false);
-      } else if (attribute === 'email') {
-        setEmailError(false);
-      } else if (attribute === 'description') {
-        setDescriptionError(false);
-      } else if (attribute === 'time') {
-        setTimeError(false);
-      } else if (attribute === 'date') {
-        setDateError(false);
-      } else if (attribute === 'destination') {
-        setDestinationError(false);
-        setMarker(null);
-      }
+      setMarker(null);
     }
   };
 
@@ -181,12 +123,12 @@ export default function EventForm() {
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <Grid container spacing={2} justifyContent='center'>
         <Grid item xs={12} sm={6} container spacing={3}>
-            <FormInput anError={titleError} handleChange={handleChange} id="title" value={title}/>
-            <FormInput anError={descriptionError} handleChange={handleChange} id="description" value={description}/>
-            <FormInput anError={dateError} handleChange={handleChange} id="date" value={date} />
-            <FormInput anError={timeError} handleChange={handleChange} id="time" value={time} />
+            <FormInput handleChange={handleChange} id="title" value={title}/>
+            <FormInput handleChange={handleChange} id="description" value={description}/>
+            <FormInput handleChange={handleChange} id="date" value={date} />
+            <FormInput handleChange={handleChange} id="time" value={time} />
             <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} handleChange={handleChange} id="origin" value={origin} />
-            <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} anError={destinationError} handleChange={handleChange} id="destination" value={destination} />
+            <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} handleChange={handleChange} id="destination" value={destination} />
         </Grid>
         <Grid item container alignContent="space-between" spacing={3} xs={12} sm={6}>
           <Grid item xs={12} className={on ? classes.height2 : classes.height}>
@@ -201,7 +143,7 @@ export default function EventForm() {
           </Grid>
           {on &&
             <Grid item xs={12}>
-              <FormInput anError={emailError} handleChange={handleChange} id="email" value={email} />
+              <FormInput handleChange={handleChange} id="email" value={email} />
             </Grid>}
         </Grid>
       <Grid item xs={12} container justifyContent='center'>
