@@ -1,40 +1,32 @@
 require('dotenv/config');
 const format = require('date-fns/format');
-const { zonedTimeToUtc } = require('date-fns-tz');
 const db = require('./db.js');
 const sgMail = require('@sendgrid/mail');
-const formatDistanceStrict = require('date-fns/formatDistanceStrict');
 const { utcToZonedTime } = require('date-fns-tz');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const checkTime = time => {
-  if (time === '6 hours' || time === '5 hours' || time === '4 hours' || time === '3 hours' || time === '2 hours' || time === '1 hours' || time === '0 hours') return true;
-  return false;
-};
-
-const todayUTC = zonedTimeToUtc(format(new Date(), 'yyyy-MM-dd HH'), Intl.DateTimeFormat().resolvedOptions().timeZone);
 const sql = `
     select "title",
            "description",
            "timestamp",
            "origin",
            "destination",
-           "notification",
-           "sent",
            "email",
+           "sent",
+           "notification",
            "eventId"
       from "events"
-     where "userId" = $1
+     where "userId" = $1 and
+     "sent" = false and
+     "notification" = true and
+     EXTRACT(hour from age(timestamp, current_timestamp)) <= '06' and
+EXTRACT(hour from age(timestamp, current_timestamp)) >= '00';
   `;
 const params = [1];
 db.query(sql, params)
   .then(result => {
-    const { rows } = result;
-    const eventList = rows.filter(event => {
-      if (checkTime(formatDistanceStrict(event.timestamp, todayUTC, { unit: 'hour' })) && !event.sent) return true;
-      return false;
-    });
+    const { rows: eventList } = result;
     eventList.forEach(event => {
       const { email, title, description, timestamp, destination, origin, eventId } = event;
       const newDate = new Date(timestamp);
