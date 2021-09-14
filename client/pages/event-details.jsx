@@ -1,6 +1,6 @@
 import { Card, Grid, Typography, CardContent, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import BackButton from '../components/back-button';
 import Map from '../components/map';
 import timestampConversion from '../lib/date-and-time-conversion';
@@ -42,6 +42,14 @@ export default function EventDetails(props) {
   const [event, setEvent] = useState(null);
   const [center, setCenter] = useState(null);
   const [marker, setMarker] = useState(null);
+  const [dirOptions, setDirOptions] = useState(
+    {
+      destination: null,
+      origin: null,
+      travelMode: 'DRIVING'
+    }
+  );
+  const [dirRes, setDirRes] = useState(null);
 
   const handleLoad = () => {
     const coords = event.coords.destinationCoords;
@@ -49,11 +57,20 @@ export default function EventDetails(props) {
     setMarker(coords);
   };
 
+  const directionsCallback = useCallback(res => {
+    if (res !== null) {
+      if (res.status === 'OK') {
+        setDirRes(res);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     fetch(`api/events/${props.eventId}`)
       .then(res => res.json())
       .then(result => {
         setEvent(result);
+        setDirOptions({ ...dirOptions, destination: result.destination, origin: result.origin });
       });
   }, []);
 
@@ -108,7 +125,7 @@ export default function EventDetails(props) {
                             </Typography>}
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                          <Map handleLoad={handleLoad} center={center} marker={marker} />
+                          <Map handleLoad={handleLoad} center={center} marker={marker} dirOptions={dirOptions} dirRes={dirRes} directionsCallback={directionsCallback}/>
                         </Grid>
                     </Grid>
                     </CardContent>

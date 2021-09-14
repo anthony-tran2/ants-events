@@ -1,5 +1,5 @@
 import { Button, FormControlLabel, Grid, Switch, makeStyles, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
@@ -41,6 +41,14 @@ export default function EventForm() {
   );
   const [marker, setMarker] = useState(null);
   const [error, setError] = useState(false);
+  const [dirOptions, setDirOptions] = useState(
+    {
+      destination: null,
+      origin: null,
+      travelMode: 'DRIVING'
+    }
+  );
+  const [dirRes, setDirRes] = useState(null);
   const classes = useStyles();
 
   const handleMapLoad = () => {
@@ -62,13 +70,23 @@ export default function EventForm() {
         setMarker(newCenter);
         setValues({ ...values, destinationCoords: newCenter });
         setValues({ ...values, destination: autocomplete.getPlace().formatted_address });
+        setDirOptions({ ...dirOptions, destination: autocomplete.getPlace().formatted_address });
       }
       if (target === 'origin') {
         setValues({ ...values, originCoords: newCenter });
         setValues({ ...values, origin: autocomplete.getPlace().formatted_address });
+        setDirOptions({ ...dirOptions, origin: autocomplete.getPlace().formatted_address });
       }
     }
   };
+
+  const directionsCallback = useCallback(res => {
+    if (res !== null) {
+      if (res.status === 'OK') {
+        setDirRes(res);
+      }
+    }
+  }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -134,7 +152,7 @@ export default function EventForm() {
         </Grid>
         <Grid item container alignContent="space-between" spacing={3} xs={12} sm={6}>
           <Grid item xs={12} className={values.on ? classes.height2 : classes.height}>
-            <Map marker={marker} center={center} handleLoad={handleMapLoad}/>
+            <Map marker={marker} center={center} handleLoad={handleMapLoad} dirOptions={dirOptions} dirRes={dirRes} directionsCallback={directionsCallback}/>
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel className={classes.switch}
