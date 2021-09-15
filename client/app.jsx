@@ -8,6 +8,7 @@ import parseRoute from './lib/parse-route.js';
 import NotFound from './pages/not-found.jsx';
 import EventDetails from './pages/event-details.jsx';
 import SearchPage from './pages/search.jsx';
+import EditEvent from './pages/edit-event.jsx';
 
 const theme = createTheme({
   palette: {
@@ -49,8 +50,12 @@ export default function App() {
       const eventId = route.params.get('eventId');
       return <EventDetails hash={prevRoute} eventId={eventId}/>;
     }
+    if (route.path === 'edit-events') {
+      const eventId = route.params.get('eventId');
+      return <EditEvent eventId={eventId} />;
+    }
     if (route.path === 'create-events') {
-      return <CreateEvent />;
+      return <CreateEvent/>;
     }
     if (route.path === 'search') {
       return <SearchPage />;

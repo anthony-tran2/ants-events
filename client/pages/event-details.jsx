@@ -86,7 +86,7 @@ export default function EventDetails(props) {
           <Grid container justifyContent='center'>
             <Grid item container className={classes.spacingbutton} justifyContent="space-between">
               <BackButton hash={props.hash} />
-              <a href='#edit-events'>
+              <a href={`#edit-events?eventId=${props.eventId}`}>
                 <Button variant="contained" color="primary">
                   EDIT
                 </Button>

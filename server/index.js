@@ -106,6 +106,35 @@ app.get('/api/search/:keyword', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.patch('/api/events/:eventId', (req, res, next) => {
+  const eventId = parseInt(req.params.eventId, 10);
+  if (!eventId) {
+    throw new ClientError(400, 'eventId must be a positive integer');
+  }
+  const { title, description, timestamp, origin, destination, coords, notification, email } = req.body;
+  const sql = `
+       update "events"
+       set "email"        = $1,
+           "title"        = $2,
+           "description"  = $3,
+           "timestamp"    = $4,
+           "origin"       = $5,
+           "destination"  = $6,
+           "coords"       = $7,
+           "notification" = $8
+     where "userId" = $9 AND
+           "eventId" = $10
+    returning *;
+  `;
+  const params = [email, title, description, timestamp, origin, destination, coords, notification, userId, eventId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
+      res.status(200).json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
