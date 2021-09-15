@@ -1,5 +1,5 @@
 import { Button, FormControlLabel, Grid, Switch, makeStyles, Typography } from '@material-ui/core';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EventForm() {
+export default function EventForm(props) {
   const [values, setValues] = useState(
     {
       title: '',
@@ -50,6 +50,15 @@ export default function EventForm() {
   );
   const [dirRes, setDirRes] = useState(null);
   const classes = useStyles();
+
+  useEffect(() => {
+    if (props.editValues) {
+      setValues(props.editValues);
+      setCenter(props.editValues.destinationCoords);
+      setMarker(props.editValues.destinationCoords);
+      setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
+    }
+  }, []);
 
   const handleMapLoad = () => {
     setCenter(
