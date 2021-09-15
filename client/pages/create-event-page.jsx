@@ -29,7 +29,7 @@ export default function CreateEvent(props) {
     <main>
       <Container maxWidth="lg" >
           <Grid container className={`${matches ? classes.absolute : ''} ${classes.height}`} alignItems='center'>
-          <BackButton hash={'#'} />
+          <BackButton/>
         </Grid>
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading}>
           Create An Event

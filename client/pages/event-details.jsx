@@ -85,12 +85,16 @@ export default function EventDetails(props) {
         <Container maxWidth="lg">
           <Grid container justifyContent='center'>
             <Grid item container className={classes.spacingbutton} justifyContent="space-between">
-              <BackButton hash={props.hash} />
-              <a href={`#edit-events?eventId=${props.eventId}`}>
-                <Button variant="contained" color="primary">
-                  EDIT
-                </Button>
-              </a>
+              <Grid item>
+                <BackButton/>
+              </Grid>
+              <Grid item>
+                <a href={`#edit-events?eventId=${props.eventId}`}>
+                  <Button variant="contained" color="primary">
+                    EDIT
+                  </Button>
+                </a>
+              </Grid>
             </Grid>
             <Grid item xs={12}>
               <Card className={classes.card}>
