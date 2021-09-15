@@ -85,7 +85,7 @@ export default function EventDetails(props) {
         <Container maxWidth="lg">
           <Grid container justifyContent='center'>
             <Grid item container className={classes.spacingbutton} justifyContent='flex-start'>
-              <BackButton />
+              <BackButton hash={props.hash} />
             </Grid>
             <Grid item xs={12}>
               <Card className={classes.card}>

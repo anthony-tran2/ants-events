@@ -99,41 +99,62 @@ export default function EventForm(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords } = values;
-    if (title && description && time && date && destination) {
-      const coords = { originCoords, destinationCoords };
-      const zonedDate = `${date} ${time}:00`;
-      const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
-      const init = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ title, description, timestamp, origin, destination, coords, email, notification: on })
-      };
-      fetch('/api/events', init)
-        .then(() => {
-          setValues({
-            title: '',
-            description: '',
-            time: '',
-            date: '',
-            on: false,
-            email: '',
-            origin: '',
-            destination: '',
-            originCoords: null,
-            destinationCoords: null
-          });
-          setCenter({
-            lat: 33.63512489483346,
-            lng: -117.74047007255454
-          });
-          setMarker(null);
-          setError(false);
-        })
-        .catch(err => console.error(err));
-    } else setError(true);
+    if (!props.editValues) {
+      const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords } = values;
+      if (title && description && time && date && destination) {
+        const coords = { originCoords, destinationCoords };
+        const zonedDate = `${date} ${time}:00`;
+        const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
+        const init = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, description, timestamp, origin, destination, coords, email, notification: on })
+        };
+        fetch('/api/events', init)
+          .then(() => {
+            setValues({
+              title: '',
+              description: '',
+              time: '',
+              date: '',
+              on: false,
+              email: '',
+              origin: '',
+              destination: '',
+              originCoords: null,
+              destinationCoords: null
+            });
+            setCenter({
+              lat: 33.63512489483346,
+              lng: -117.74047007255454
+            });
+            setMarker(null);
+            setError(false);
+          })
+          .catch(err => console.error(err));
+      } else setError(true);
+    } else if (props.editValues) {
+      const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords, eventId } = values;
+      if (title && description && time && date && destination) {
+        const coords = { originCoords, destinationCoords };
+        const zonedDate = `${date} ${time}:00`;
+        const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
+        const init = {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, description, timestamp, origin, destination, coords, email, notification: on })
+        };
+        fetch(`/api/events/${eventId}`, init)
+          .then(() => {
+            window.location.hash = `#events?eventId=${eventId}`;
+          })
+          .catch(err => console.error(err));
+      } else setError(true);
+    }
 
   };
 

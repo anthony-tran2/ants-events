@@ -28,6 +28,7 @@ const theme = createTheme({
 
 export default function App() {
   const [route, setRoute] = useState(parseRoute(window.location.hash));
+  const [prevRoute, setPrevRoute] = useState('');
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
@@ -35,13 +36,18 @@ export default function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (route.path === '') setPrevRoute('#');
+    if (route.path === 'search') setPrevRoute('#search');
+  }, [route]);
+
   const renderPage = () => {
     if (route.path === '') {
       return <Home />;
     }
     if (route.path === 'events') {
       const eventId = route.params.get('eventId');
-      return <EventDetails eventId={eventId}/>;
+      return <EventDetails hash={prevRoute} eventId={eventId}/>;
     }
     if (route.path === 'create-events') {
       return <CreateEvent />;
