@@ -114,14 +114,14 @@ app.patch('/api/events/:eventId', (req, res, next) => {
   const { title, description, timestamp, origin, destination, coords, notification, email } = req.body;
   const sql = `
        update "events"
-       set "email"        = $1,
-           "title"        = $2,
-           "description"  = $3,
-           "timestamp"    = $4,
-           "origin"       = $5,
-           "destination"  = $6,
-           "coords"       = $7,
-           "notification" = $8
+       set "email"        = coalesce($1, "email"),
+           "title"        = coalesce($2, "title"),
+           "description"  = coalesce($3, "description"),
+           "timestamp"    = coalesce($4, "timestamp"),
+           "origin"       = coalesce($5, "origin"),
+           "destination"  = coalesce($6, "destination"),
+           "coords"       = coalesce($7, "coords"),
+           "notification" = coalesce($8, "notification")
      where "userId" = $9 AND
            "eventId" = $10
     returning *;
