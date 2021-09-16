@@ -36,8 +36,8 @@ export default function EditEvent(props) {
         const zonedDate = utcToZonedTime(timestamp, Intl.DateTimeFormat().resolvedOptions().timeZone);
         const date = format(zonedDate, 'yyyy-MM-dd');
         const time = format(zonedDate, 'HH:mm');
-        setEditValues({ coords, description, destination, email, eventId, on, origin, title, date, time });
-        return () => { setEditValues({ coords, description, destination, email, eventId, on, origin, title, date, time }); };
+        setEditValues({ originCoords: coords.originCoords, destinationCoords: coords.destinationCoords, description, destination, email, eventId, on, origin, title, date, time });
+        return () => { setEditValues({ originCoords: coords.originCoords, destinationCoords: coords.destinationCoords, description, destination, email, eventId, on, origin, title, date, time }); };
       })
       .catch(err => console.error(err));
   }, []);

@@ -53,19 +53,23 @@ export default function EventForm(props) {
 
   useEffect(() => {
     if (props.editValues) {
-      setValues(props.editValues);
-      setCenter(props.editValues.destinationCoords);
+      setValues({ ...props.editValues });
       setMarker(props.editValues.destinationCoords);
       setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
-    }
+    } return () => {
+      setValues({ ...props.editValues });
+      setMarker(props.editValues.destinationCoords);
+      setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
+    };
   }, []);
 
   const handleMapLoad = () => {
-    setCenter(
-      {
-        lat: 33.63512489483346,
-        lng: -117.74047007255454
-      }
+    setCenter(props.editValues
+      ? props.editValues.destinationCoords
+      : {
+          lat: 0,
+          lng: 0
+        }
     );
   };
 
@@ -77,13 +81,11 @@ export default function EventForm(props) {
       if (target === 'destination') {
         setCenter(newCenter);
         setMarker(newCenter);
-        setValues({ ...values, destinationCoords: newCenter });
-        setValues({ ...values, destination: autocomplete.getPlace().formatted_address });
+        setValues({ ...values, destinationCoords: newCenter, destination: autocomplete.getPlace().formatted_address });
         setDirOptions({ ...dirOptions, destination: autocomplete.getPlace().formatted_address });
       }
       if (target === 'origin') {
-        setValues({ ...values, originCoords: newCenter });
-        setValues({ ...values, origin: autocomplete.getPlace().formatted_address });
+        setValues({ ...values, originCoords: newCenter, origin: autocomplete.getPlace().formatted_address });
         setDirOptions({ ...dirOptions, origin: autocomplete.getPlace().formatted_address });
       }
     }
@@ -99,21 +101,31 @@ export default function EventForm(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!props.editValues) {
-      const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords } = values;
-      if (title && description && time && date && destination) {
-        const coords = { originCoords, destinationCoords };
-        const zonedDate = `${date} ${time}:00`;
-        const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
-        const init = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ title, description, timestamp, origin, destination, coords, email, notification: on })
-        };
-        fetch('/api/events', init)
-          .then(() => {
+    const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords } = values;
+    if (title && description && time && date && destination) {
+      const coords = { originCoords, destinationCoords };
+      if (origin === '') coords.originCoords = null;
+      const zonedDate = `${date} ${time}:00`;
+      const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
+      let method = 'POST';
+      let fetchLink = '/api/events';
+      const body = { title, description, timestamp, origin, destination, coords, email, notification: on };
+      if (props.editValues) {
+        method = 'PATCH';
+        fetchLink = `/api/events/${props.editValues.eventId}`;
+      }
+      const init = {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      };
+      fetch(fetchLink, init)
+        .then(() => {
+          if (props.editValues) {
+            window.location.hash = `#events?eventId=${props.editValues.eventId}`;
+          } else {
             setValues({
               title: '',
               description: '',
@@ -132,30 +144,10 @@ export default function EventForm(props) {
             });
             setMarker(null);
             setError(false);
-          })
-          .catch(err => console.error(err));
-      } else setError(true);
-    } else if (props.editValues) {
-      const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords, eventId } = values;
-      if (title && description && time && date && destination) {
-        const coords = { originCoords, destinationCoords };
-        const zonedDate = `${date} ${time}:00`;
-        const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
-        const init = {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ title, description, timestamp, origin, destination, coords, email, notification: on })
-        };
-        fetch(`/api/events/${eventId}`, init)
-          .then(() => {
-            window.location.hash = `#events?eventId=${eventId}`;
-          })
-          .catch(err => console.error(err));
-      } else setError(true);
-    }
-
+          }
+        })
+        .catch(err => console.error(err));
+    } else setError(true);
   };
 
   const handleChange = e => {

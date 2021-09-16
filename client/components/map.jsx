@@ -23,7 +23,7 @@ export default function Map(props) {
         zoom={17}
       >
         {
-          (props.marker && props.dirRes !== null) &&
+          (props.marker && !props.dirRes) &&
           <Marker position={props.marker} />
         }
         {(
