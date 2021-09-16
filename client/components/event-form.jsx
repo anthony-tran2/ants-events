@@ -101,10 +101,11 @@ export default function EventForm(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords } = values;
+    let { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords } = values;
     if (title && description && time && date && destination) {
       const coords = { originCoords, destinationCoords };
       if (origin === '') coords.originCoords = null;
+      if (on === false) email = '';
       const zonedDate = `${date} ${time}:00`;
       const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
       let method = 'POST';
