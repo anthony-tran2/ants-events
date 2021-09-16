@@ -1,5 +1,5 @@
 import { Button, FormControlLabel, Grid, Switch, makeStyles, Typography } from '@material-ui/core';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EventForm() {
+export default function EventForm(props) {
   const [values, setValues] = useState(
     {
       title: '',
@@ -51,12 +51,25 @@ export default function EventForm() {
   const [dirRes, setDirRes] = useState(null);
   const classes = useStyles();
 
+  useEffect(() => {
+    if (props.editValues) {
+      setValues({ ...props.editValues });
+      setMarker(props.editValues.destinationCoords);
+      setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
+    } return () => {
+      setValues({ ...props.editValues });
+      setMarker(props.editValues.destinationCoords);
+      setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
+    };
+  }, []);
+
   const handleMapLoad = () => {
-    setCenter(
-      {
-        lat: 33.63512489483346,
-        lng: -117.74047007255454
-      }
+    setCenter(props.editValues
+      ? props.editValues.destinationCoords
+      : {
+          lat: 0,
+          lng: 0
+        }
     );
   };
 
@@ -68,13 +81,11 @@ export default function EventForm() {
       if (target === 'destination') {
         setCenter(newCenter);
         setMarker(newCenter);
-        setValues({ ...values, destinationCoords: newCenter });
-        setValues({ ...values, destination: autocomplete.getPlace().formatted_address });
+        setValues({ ...values, destinationCoords: newCenter, destination: autocomplete.getPlace().formatted_address });
         setDirOptions({ ...dirOptions, destination: autocomplete.getPlace().formatted_address });
       }
       if (target === 'origin') {
-        setValues({ ...values, originCoords: newCenter });
-        setValues({ ...values, origin: autocomplete.getPlace().formatted_address });
+        setValues({ ...values, originCoords: newCenter, origin: autocomplete.getPlace().formatted_address });
         setDirOptions({ ...dirOptions, origin: autocomplete.getPlace().formatted_address });
       }
     }
@@ -93,39 +104,50 @@ export default function EventForm() {
     const { title, description, time, date, on, email, origin, destination, originCoords, destinationCoords } = values;
     if (title && description && time && date && destination) {
       const coords = { originCoords, destinationCoords };
+      if (origin === '') coords.originCoords = null;
       const zonedDate = `${date} ${time}:00`;
       const timestamp = zonedTimeToUtc(zonedDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
+      let method = 'POST';
+      let fetchLink = '/api/events';
+      const body = { title, description, timestamp, origin, destination, coords, email, notification: on };
+      if (props.editValues) {
+        method = 'PATCH';
+        fetchLink = `/api/events/${props.editValues.eventId}`;
+      }
       const init = {
-        method: 'POST',
+        method,
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title, description, timestamp, origin, destination, coords, email, notification: on })
+        body: JSON.stringify(body)
       };
-      fetch('/api/events', init)
+      fetch(fetchLink, init)
         .then(() => {
-          setValues({
-            title: '',
-            description: '',
-            time: '',
-            date: '',
-            on: false,
-            email: '',
-            origin: '',
-            destination: '',
-            originCoords: null,
-            destinationCoords: null
-          });
-          setCenter({
-            lat: 33.63512489483346,
-            lng: -117.74047007255454
-          });
-          setMarker(null);
-          setError(false);
+          if (props.editValues) {
+            window.location.hash = `#events?eventId=${props.editValues.eventId}`;
+          } else {
+            setValues({
+              title: '',
+              description: '',
+              time: '',
+              date: '',
+              on: false,
+              email: '',
+              origin: '',
+              destination: '',
+              originCoords: null,
+              destinationCoords: null
+            });
+            setCenter({
+              lat: 33.63512489483346,
+              lng: -117.74047007255454
+            });
+            setMarker(null);
+            setError(false);
+          }
         })
         .catch(err => console.error(err));
     } else setError(true);
-
   };
 
   const handleChange = e => {

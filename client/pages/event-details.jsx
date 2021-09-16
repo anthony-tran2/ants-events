@@ -1,4 +1,4 @@
-import { Card, Grid, Typography, CardContent, Container } from '@material-ui/core';
+import { Card, Grid, Typography, CardContent, Container, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { useCallback, useEffect, useState } from 'react';
 import BackButton from '../components/back-button';
@@ -84,8 +84,17 @@ export default function EventDetails(props) {
       <main>
         <Container maxWidth="lg">
           <Grid container justifyContent='center'>
-            <Grid item container className={classes.spacingbutton} justifyContent='flex-start'>
-              <BackButton />
+            <Grid item container className={classes.spacingbutton} justifyContent="space-between">
+              <Grid item>
+                <BackButton/>
+              </Grid>
+              <Grid item>
+                <a href={`#edit-events?eventId=${props.eventId}`}>
+                  <Button variant="contained" color="primary">
+                    EDIT
+                  </Button>
+                </a>
+              </Grid>
             </Grid>
             <Grid item xs={12}>
               <Card className={classes.card}>
