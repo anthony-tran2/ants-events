@@ -144,9 +144,10 @@ app.delete('/api/events/:eventId', (req, res, next) => {
     delete from "events"
           where "eventId" = $1 and
                 "userId" = $2
+                returning *
   `;
   const params = [eventId, userId];
-  db.query(params, sql)
+  db.query(sql, params)
     .then(result => {
       if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
       res.sendStatus(200);
