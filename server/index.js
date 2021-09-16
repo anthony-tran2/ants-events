@@ -135,6 +135,25 @@ app.patch('/api/events/:eventId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.delete('/api/events/:eventId', (req, res, next) => {
+  const eventId = parseInt(req.params.eventId, 10);
+  if (!eventId) {
+    throw new ClientError(400, 'eventId must be a positive integer');
+  }
+  const sql = `
+    delete from "events"
+          where "eventId" = $1 and
+                "userId" = $2
+  `;
+  const params = [eventId, userId];
+  db.query(params, sql)
+    .then(result => {
+      if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
+      res.sendStatus(200);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
