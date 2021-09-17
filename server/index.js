@@ -4,6 +4,7 @@ const db = require('./db.js');
 const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const argon2 = require('argon2');
 
 const app = express();
 const jsonMiddleware = express.json();
@@ -151,6 +152,28 @@ app.delete('/api/events/:eventId', (req, res, next) => {
     .then(result => {
       if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
       res.sendStatus(200);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-up', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const sql = `
+        insert into "users" ("username", "hashedPassword")
+        values ($1, $2)
+        returning "userId", "username"
+      `;
+      const params = [username, hashedPassword];
+      return db.query(sql, params);
+    })
+    .then(result => {
+      res.status(201).json(result.rows[0]);
     })
     .catch(err => next(err));
 });
