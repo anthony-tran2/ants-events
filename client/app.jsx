@@ -9,6 +9,7 @@ import NotFound from './pages/not-found.jsx';
 import EventDetails from './pages/event-details.jsx';
 import SearchPage from './pages/search.jsx';
 import EditEvent from './pages/edit-event.jsx';
+import SignUp from './pages/sign-up.jsx';
 
 const theme = createTheme({
   palette: {
@@ -27,8 +28,11 @@ const theme = createTheme({
   }
 });
 
+export const UserContext = React.createContext();
+
 export default function App() {
   const [route, setRoute] = useState(parseRoute(window.location.hash));
+  const user = null;
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
@@ -37,6 +41,9 @@ export default function App() {
   }, []);
 
   const renderPage = () => {
+    if (route.path === 'sign-up') {
+      return <SignUp />;
+    }
     if (route.path === '') {
       return <Home />;
     }
@@ -60,7 +67,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <Header route={route.path} />
-      {renderPage()}
+      <UserContext.Provider value={user}>
+        {renderPage()}
+      </UserContext.Provider>
     </ThemeProvider>
   );
 }

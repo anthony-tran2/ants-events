@@ -7,10 +7,10 @@ drop schema "public" cascade;
 create schema "public";
 
 CREATE TABLE "public"."users" (
-	"userid" serial NOT NULL,
+	"userId" serial NOT NULL,
 	"username" TEXT NOT NULL UNIQUE,
 	"hashedPassword" TEXT NOT NULL,
-	CONSTRAINT "users_pk" PRIMARY KEY ("userid")
+	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE
 );
@@ -44,6 +44,6 @@ CREATE TABLE "public"."notes" (
   OIDS=FALSE
 );
 
-ALTER TABLE "events" ADD CONSTRAINT "events_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userid");
+ALTER TABLE "events" ADD CONSTRAINT "events_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 
-ALTER TABLE "notes" ADD CONSTRAINT "notes_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userid");
+ALTER TABLE "notes" ADD CONSTRAINT "notes_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
