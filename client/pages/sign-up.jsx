@@ -9,10 +9,11 @@ const useStyles = makeStyles(theme => (
         borderRadius: '8px'
       }
     },
+
     heading: {
       fontSize: '2.5rem',
       fontWeight: '300',
-      marginTop: '0.35em'
+      marginTop: '2rem'
     }
   }
 ));
@@ -30,33 +31,45 @@ export default function SignUp() {
   useEffect(() => {
     fetch('/api/users/usernames')
       .then(res => res.json())
-      .then(result => setUsernames(result))
-      .catch(err => console.error(err));
+      .then(result => {
+        setUsernames(result);
+      });
   }, []);
 
   const handleChange = e => {
     setAccount({ ...account, [e.target.getAttribute('id')]: e.target.value });
+    for (let i = 0; i < usernames.length; i++) {
+      if (usernames[i].username === e.target.value || usernames[i].username === account.username) {
+        return setTaken(true);
+      } else setTaken(false);
+    }
   };
 
   const handleSubmit = e => {
     const { username, password } = account;
-    usernames.forEach(value => { if (value === username) setTaken(true); });
-    if (!username || !password || taken) return setError(true);
-    const init = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: account
-    };
-    fetch('/api/auth/sign-up', init)
-      .then(() => {
-        setAccount({
-          username: '',
-          password: ''
-        });
-      })
-      .catch(err => console.error(err));
+    if (!username || !password || taken) return setError(true); else {
+      setError(false);
+      const init = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(account)
+      };
+      fetch('/api/auth/sign-up', init)
+        .then(() => {
+          setAccount({
+            username: '',
+            password: ''
+          });
+          fetch('/api/users/usernames')
+            .then(res => res.json())
+            .then(result => {
+              setUsernames(result);
+            });
+        })
+        .catch(err => console.error(err));
+    }
   };
 
   return (
