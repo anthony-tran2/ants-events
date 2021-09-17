@@ -44,6 +44,7 @@ export default function Home(props) {
 
   if (!user) {
     window.location.hash = '#sign-up';
+    return null;
   } else {
     return (
       <>
