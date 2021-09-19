@@ -5,15 +5,74 @@ const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
+const authorizationMiddleware = require('./authorizationMiddleware.js');
 
 const app = express();
 const jsonMiddleware = express.json();
-const userId = 1;
 
 app.use(staticMiddleware);
 app.use(jsonMiddleware);
 
+app.post('/api/auth/sign-up', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const sql = `
+        insert into "users" ("username", "hashedPassword")
+        values ($1, $2)
+        returning "userId", "username"
+      `;
+      const params = [username, hashedPassword];
+      return db.query(sql, params);
+    })
+    .then(result => {
+      res.status(201).json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-in', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(401, 'invalid login');
+  }
+  const sql = `
+    select "userId",
+           "hashedPassword"
+      from "users"
+     where "username" = $1
+  `;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      if (!user) {
+        throw new ClientError(401, 'invalid login');
+      }
+      const { userId, hashedPassword } = user;
+      return argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) {
+            throw new ClientError(401, 'invalid login');
+          }
+          const payload = { userId, username };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          res.json({ token, user: payload });
+        });
+    })
+    .catch(err => next(err));
+});
+
+app.use(authorizationMiddleware);
+
 app.post('/api/events', (req, res, next) => {
+  const { userId } = req.user;
   const { title, description, timestamp, origin, destination, coords, notification, email } = req.body;
 
   if (!title || !description || !timestamp || !destination || !coords) {
@@ -34,6 +93,7 @@ app.post('/api/events', (req, res, next) => {
 });
 
 app.get('/api/events', (req, res, next) => {
+  const { userId } = req.user;
   const sql = `
     select "eventId",
            "title",
@@ -56,6 +116,7 @@ app.get('/api/events', (req, res, next) => {
 });
 
 app.get('/api/events/:eventId', (req, res, next) => {
+  const { userId } = req.user;
   const eventId = parseInt(req.params.eventId, 10);
   if (!eventId) {
     throw new ClientError(400, 'eventId must be a positive integer');
@@ -84,6 +145,7 @@ app.get('/api/events/:eventId', (req, res, next) => {
 });
 
 app.get('/api/search/:keyword', (req, res, next) => {
+  const { userId } = req.user;
   const keyword = req.params.keyword;
   const sql = `
     select "eventId",
@@ -108,6 +170,7 @@ app.get('/api/search/:keyword', (req, res, next) => {
 });
 
 app.patch('/api/events/:eventId', (req, res, next) => {
+  const { userId } = req.user;
   const eventId = parseInt(req.params.eventId, 10);
   if (!eventId) {
     throw new ClientError(400, 'eventId must be a positive integer');
@@ -137,6 +200,7 @@ app.patch('/api/events/:eventId', (req, res, next) => {
 });
 
 app.delete('/api/events/:eventId', (req, res, next) => {
+  const { userId } = req.user;
   const eventId = parseInt(req.params.eventId, 10);
   if (!eventId) {
     throw new ClientError(400, 'eventId must be a positive integer');
@@ -152,28 +216,6 @@ app.delete('/api/events/:eventId', (req, res, next) => {
     .then(result => {
       if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
       res.sendStatus(200);
-    })
-    .catch(err => next(err));
-});
-
-app.post('/api/auth/sign-up', (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    throw new ClientError(400, 'username and password are required fields');
-  }
-  argon2
-    .hash(password)
-    .then(hashedPassword => {
-      const sql = `
-        insert into "users" ("username", "hashedPassword")
-        values ($1, $2)
-        returning "userId", "username"
-      `;
-      const params = [username, hashedPassword];
-      return db.query(sql, params);
-    })
-    .then(result => {
-      res.status(201).json(result.rows[0]);
     })
     .catch(err => next(err));
 });
