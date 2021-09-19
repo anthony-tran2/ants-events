@@ -25,7 +25,7 @@ export default function SignUp() {
     username: '',
     password: ''
   });
-  const [usernames, setUsernames] = useState(null);
+  const [usernames, setUsernames] = useState([]);
   const [error, setError] = useState(false);
   const [taken, setTaken] = useState(false);
   const contextValues = useContext(UserContext);
@@ -75,8 +75,11 @@ export default function SignUp() {
             window.location.hash = '#sign-in';
           }
           if (route.path === 'sign-in') {
-            handleSignIn(result);
-            window.location.hash = '#';
+            if (!result.error) {
+              handleSignIn(result);
+              window.location.hash = '#';
+            }
+            setError(true);
           }
         })
         .catch(err => console.error(err));
@@ -92,6 +95,8 @@ export default function SignUp() {
         </Typography>
           {(error && route.path === 'sign-up') &&
               <Typography align='center' style={{ color: '#DB5461' }}>Invalid username and password are required! Try again.</Typography>}
+          {(error && route.path === 'sign-in') &&
+            <Typography align='center' style={{ color: '#DB5461' }}>Invalid login.</Typography>}
       <Grid item>
         <TextField
           required
