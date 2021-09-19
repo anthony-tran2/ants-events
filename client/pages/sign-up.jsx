@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Grid, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { UserContext } from '../app';
 
 const useStyles = makeStyles(theme => (
   {
@@ -27,6 +28,7 @@ export default function SignUp() {
   const [usernames, setUsernames] = useState(null);
   const [error, setError] = useState(false);
   const [taken, setTaken] = useState(false);
+  const contextValues = useContext(UserContext);
 
   useEffect(() => {
     fetch('/api/users/usernames')
@@ -93,7 +95,7 @@ export default function SignUp() {
           value={account.username}
           className={classes.root}
           />
-            {taken &&
+            {(taken && contextValues.route.path === 'sign-in') &&
               <Typography align='center' style={{ color: '#DB5461' }}>Username taken! Try a different one.</Typography>}
       </Grid>
       <Grid item>
@@ -112,11 +114,12 @@ export default function SignUp() {
       </Grid>
       <Grid item>
         <Button type='submit' variant="contained" color="primary">
-          SIGN UP
+          {contextValues.route.path === 'sign-in' ? 'SIGN IN' : 'SIGN UP'}
         </Button>
       </Grid>
       </Grid>
       </form>
     </Container>
   );
+
 }

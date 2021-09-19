@@ -1,11 +1,12 @@
 import { Card, Grid, Typography, CardContent, Container, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import BackButton from '../components/back-button';
 import Map from '../components/map';
 import timestampConversion from '../lib/date-and-time-conversion';
 import CheckIcon from '@material-ui/icons/Check';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import { UserContext } from '../app';
 
 const useStyles = makeStyles(theme => (
   {
@@ -50,6 +51,7 @@ export default function EventDetails(props) {
     }
   );
   const [dirRes, setDirRes] = useState(null);
+  const contextValues = useContext(UserContext);
 
   const handleLoad = () => {
     const coords = event.coords.destinationCoords;
@@ -76,6 +78,10 @@ export default function EventDetails(props) {
 
   const classes = useStyles();
 
+  if (!contextValues.token) {
+    window.location.hash = '#sign-in';
+    return null;
+  }
   if (!event) return null;
   const { title, description, timestamp, origin, destination, notification, email } = event;
   const newTimestamp = timestampConversion(timestamp);

@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => (
 export default function Home(props) {
   const [eventList, setEventList] = useState(null);
   const classes = useStyles();
-  const user = useContext(UserContext);
+  const contextValues = useContext(UserContext);
 
   useEffect(() => {
     fetch('/api/events')
@@ -42,11 +42,11 @@ export default function Home(props) {
       .catch(err => console.error(err));
   }, []);
 
-  if (!user) {
-    window.location.hash = '#sign-up';
+  if (!contextValues.token) {
+    window.location.hash = '#sign-in';
     return null;
-  } else {
-    return (
+  }
+  return (
       <>
       <main>
         <Container maxWidth="lg" >
@@ -68,7 +68,5 @@ export default function Home(props) {
         </Container>
       </main>
       </>
-    );
-  }
-
+  );
 }

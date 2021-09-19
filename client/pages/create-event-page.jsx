@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import EventForm from '../components/event-form';
 import { Container, Typography, makeStyles, Grid, useMediaQuery } from '@material-ui/core';
 import BackButton from '../components/back-button';
+import { UserContext } from '../app';
 
 const useStyles = makeStyles(theme => (
   {
@@ -24,6 +25,11 @@ const useStyles = makeStyles(theme => (
 export default function CreateEvent(props) {
   const classes = useStyles();
   const matches = useMediaQuery('(min-width:500px)');
+  const contextValues = useContext(UserContext);
+  if (!contextValues.token) {
+    window.location.hash = '#sign-in';
+    return null;
+  }
   return (
     <>
     <main>

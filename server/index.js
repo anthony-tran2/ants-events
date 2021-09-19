@@ -69,6 +69,18 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/users/usernames', (req, res, next) => {
+  const sql = `
+        select "username"
+        from "users"
+      `;
+  db.query(sql)
+    .then(result => {
+      res.status(201).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
 app.use(authorizationMiddleware);
 
 app.post('/api/events', (req, res, next) => {
@@ -216,18 +228,6 @@ app.delete('/api/events/:eventId', (req, res, next) => {
     .then(result => {
       if (!result.rows[0]) { throw new ClientError(404, 'invalid eventId. try again.'); }
       res.sendStatus(200);
-    })
-    .catch(err => next(err));
-});
-
-app.get('/api/users/usernames', (req, res, next) => {
-  const sql = `
-        select "username"
-        from "users"
-      `;
-  db.query(sql)
-    .then(result => {
-      res.status(201).json(result.rows);
     })
     .catch(err => next(err));
 });

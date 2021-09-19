@@ -1,9 +1,10 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import EventForm from '../components/event-form';
 import { Container, Typography, makeStyles, Grid, Button, Dialog, Slide, DialogTitle, DialogActions } from '@material-ui/core';
 import BackButton from '../components/back-button';
 import { utcToZonedTime } from 'date-fns-tz';
 import format from 'date-fns/format';
+import { UserContext } from '../app';
 
 const useStyles = makeStyles(theme => (
   {
@@ -45,6 +46,7 @@ export default function EditEvent(props) {
   const classes = useStyles();
   const [editValues, setEditValues] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
+  const contextValues = useContext(UserContext);
 
   useEffect(() => {
     fetch(`/api/events/${props.eventId}`)
@@ -76,6 +78,10 @@ export default function EditEvent(props) {
       .catch(err => console.error(err));
   };
 
+  if (!contextValues.token) {
+    window.location.hash = '#sign-in';
+    return null;
+  }
   return (
     <>
       <main>
