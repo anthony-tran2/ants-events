@@ -29,25 +29,31 @@ export default function SignUp() {
   const [error, setError] = useState(false);
   const [taken, setTaken] = useState(false);
   const contextValues = useContext(UserContext);
+  const { handleSignIn, route } = contextValues;
 
   useEffect(() => {
-    fetch('/api/users/usernames')
-      .then(res => res.json())
-      .then(result => {
-        setUsernames(result);
-      });
+    if (route.path === 'sign-up') {
+      fetch('/api/users/usernames')
+        .then(res => res.json())
+        .then(result => {
+          setUsernames(result);
+        });
+    }
   }, []);
 
   const handleChange = e => {
     setAccount({ ...account, [e.target.getAttribute('id')]: e.target.value });
-    for (let i = 0; i < usernames.length; i++) {
-      if (usernames[i].username === e.target.value || usernames[i].username === account.username) {
-        return setTaken(true);
-      } else setTaken(false);
+    if (route.path === 'sign-up') {
+      for (let i = 0; i < usernames.length; i++) {
+        if (usernames[i].username === e.target.value || usernames[i].username === account.username) {
+          return setTaken(true);
+        } else setTaken(false);
+      }
     }
   };
 
   const handleSubmit = e => {
+    e.preventDefault();
     const { username, password } = account;
     if (!username || !password || taken) return setError(true); else {
       setError(false);
@@ -58,17 +64,20 @@ export default function SignUp() {
         },
         body: JSON.stringify(account)
       };
-      fetch('/api/auth/sign-up', init)
-        .then(() => {
-          setAccount({
-            username: '',
-            password: ''
-          });
-          fetch('/api/users/usernames')
-            .then(res => res.json())
-            .then(result => {
-              setUsernames(result);
+      fetch(`/api/auth/${route.path}`, init)
+        .then(res => res.json())
+        .then(result => {
+          if (route.path === 'sign-up') {
+            setAccount({
+              username: '',
+              password: ''
             });
+            window.location.hash = '#sign-in';
+          }
+          if (route.path === 'sign-in') {
+            handleSignIn(result);
+            window.location.hash = '#';
+          }
         })
         .catch(err => console.error(err));
     }
@@ -79,9 +88,9 @@ export default function SignUp() {
       <form onSubmit={handleSubmit}>
       <Grid container spacing={4} direction="column" alignItems="center" justifyContent="center">
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading}>
-          Sign Up
+          {route.path === 'sign-in' ? 'SIGN IN' : 'SIGN UP'}
         </Typography>
-          {error &&
+          {(error && route.path === 'sign-up') &&
               <Typography align='center' style={{ color: '#DB5461' }}>Invalid username and password are required! Try again.</Typography>}
       <Grid item>
         <TextField
@@ -94,8 +103,9 @@ export default function SignUp() {
           id="username"
           value={account.username}
           className={classes.root}
+          inputProps={route.path === 'sign-up' ? { minLength: 6, maxLength: 20 } : {}}
           />
-            {(taken && contextValues.route.path === 'sign-in') &&
+            {(taken && contextValues.route.path === 'sign-up') &&
               <Typography align='center' style={{ color: '#DB5461' }}>Username taken! Try a different one.</Typography>}
       </Grid>
       <Grid item>
@@ -110,11 +120,17 @@ export default function SignUp() {
           id="password"
           value={account.password}
           className={classes.root}
+          inputProps={route.path === 'sign-up' ? { minLength: 6, maxLength: 20 } : {}}
           />
       </Grid>
       <Grid item>
+        <a href={route.path === 'sign-in' ? '#sign-up' : '#sign-in'}>
+          {route.path === 'sign-in' ? "Don't have an account? Register here." : 'Already have an account? Log in here.'}
+        </a>
+      </Grid>
+      <Grid item>
         <Button type='submit' variant="contained" color="primary">
-          {contextValues.route.path === 'sign-in' ? 'SIGN IN' : 'SIGN UP'}
+          {route.path === 'sign-in' ? 'SIGN IN' : 'SIGN UP'}
         </Button>
       </Grid>
       </Grid>

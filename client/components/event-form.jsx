@@ -1,9 +1,10 @@
 import { Button, FormControlLabel, Grid, Switch, makeStyles, Typography } from '@material-ui/core';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
 import { zonedTimeToUtc } from 'date-fns-tz';
+import { UserContext } from '../app.jsx';
 
 const useStyles = makeStyles(theme => ({
   switch: {
@@ -50,6 +51,7 @@ export default function EventForm(props) {
   );
   const [dirRes, setDirRes] = useState(null);
   const classes = useStyles();
+  const contextValues = useContext(UserContext);
 
   useEffect(() => {
     if (props.editValues) {
@@ -57,9 +59,9 @@ export default function EventForm(props) {
       setMarker(props.editValues.destinationCoords);
       setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
     } return () => {
-      setValues({ ...props.editValues });
-      setMarker(props.editValues.destinationCoords);
-      setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
+      setValues(null);
+      setMarker(null);
+      setDirOptions(null);
     };
   }, []);
 
@@ -118,6 +120,7 @@ export default function EventForm(props) {
       const init = {
         method,
         headers: {
+          authorization: contextValues.token,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
@@ -140,11 +143,17 @@ export default function EventForm(props) {
               destinationCoords: null
             });
             setCenter({
-              lat: 33.63512489483346,
-              lng: -117.74047007255454
+              lat: 0,
+              lng: 0
             });
             setMarker(null);
             setError(false);
+            setDirOptions({
+              destination: null,
+              origin: null,
+              travelMode: 'DRIVING'
+            });
+            setDirRes(null);
           }
         })
         .catch(err => console.error(err));
@@ -180,7 +189,7 @@ export default function EventForm(props) {
           <Grid item xs={12}>
             <FormControlLabel className={classes.switch}
               control={<Switch checked={values.on} onChange={() => setValues({ ...values, on: !values.on })} />}
-              label="Normal"
+              label="Email Notification"
               labelPlacement="start"
             />
           </Grid>

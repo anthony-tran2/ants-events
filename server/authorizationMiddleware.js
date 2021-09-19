@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 
 function authorizationMiddleware(req, res, next) {
-  const token = req.headers['x-access-token'];
-  if (!req.headers['x-access-token']) {
+  const token = req.headers.authorization;
+  if (!req.headers.authorization) {
     throw new ClientError(401, 'authentication required');
   }
   const payload = jwt.verify(token, process.env.TOKEN_SECRET);

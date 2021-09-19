@@ -49,7 +49,7 @@ export default function EditEvent(props) {
   const contextValues = useContext(UserContext);
 
   useEffect(() => {
-    fetch(`/api/events/${props.eventId}`)
+    fetch(`/api/events/${props.eventId}`, { headers: { authorization: contextValues.token } })
       .then(res => res.json())
       .then(result => {
         const { coords, description, destination, email, eventId, notification: on, origin, timestamp, title } = result;
@@ -71,7 +71,7 @@ export default function EditEvent(props) {
   };
 
   const handleDelete = () => {
-    fetch(`/api/events/${props.eventId}`, { method: 'DELETE' })
+    fetch(`/api/events/${props.eventId}`, { method: 'DELETE', headers: { authorization: contextValues.token } })
       .then(() => {
         window.location.hash = '#';
       })

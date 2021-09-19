@@ -39,9 +39,19 @@ export default function App() {
     window.addEventListener('hashchange', () => {
       setRoute(parseRoute(window.location.hash));
     });
-    if (window.localStorage.getItem('react-context-jwt')) setToken(window.localStorage.getItem('react-context-jwt')); else setToken(null);
+    if (window.localStorage.getItem('jwt-token')) setToken(window.localStorage.getItem('jwt-token')); else setToken(null);
     setIsAuthorizing(false);
   }, []);
+
+  const handleSignIn = result => {
+    window.localStorage.setItem('jwt-token', result);
+    setToken(result);
+  };
+
+  const handleSignOut = result => {
+    window.localStorage.removeItem('jwt-token');
+    setToken(null);
+  };
 
   const renderPage = () => {
     if (route.path === 'sign-up' || route.path === 'sign-in') {
@@ -71,8 +81,8 @@ export default function App() {
   else {
     return (
     <ThemeProvider theme={theme}>
-      <Header route={route.path} />
-      <UserContext.Provider value={{ token, route }}>
+      <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut }}>
+        <Header/>
         {renderPage()}
       </UserContext.Provider>
     </ThemeProvider>

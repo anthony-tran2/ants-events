@@ -65,7 +65,7 @@ export default function SearchPage() {
       setEventList(null);
       return setSearched(false);
     }
-    fetch(`/api/search/${keyword}`)
+    fetch(`/api/search/${keyword}`, { headers: { authorization: contextValues.token } })
       .then(result => result.json())
       .then(result => {
         if (!result[0]) {

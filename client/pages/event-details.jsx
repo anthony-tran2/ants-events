@@ -68,7 +68,7 @@ export default function EventDetails(props) {
   }, []);
 
   useEffect(() => {
-    fetch(`api/events/${props.eventId}`)
+    fetch(`api/events/${props.eventId}`, { headers: { authorization: contextValues.token } })
       .then(res => res.json())
       .then(result => {
         setEvent(result);

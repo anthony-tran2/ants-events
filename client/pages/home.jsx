@@ -36,10 +36,11 @@ export default function Home(props) {
   const contextValues = useContext(UserContext);
 
   useEffect(() => {
-    fetch('/api/events')
+    fetch('/api/events', { headers: { authorization: contextValues.token } })
       .then(res => res.json())
       .then(result => setEventList(result))
       .catch(err => console.error(err));
+    return () => setEventList(null);
   }, []);
 
   if (!contextValues.token) {
