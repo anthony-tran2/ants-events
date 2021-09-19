@@ -32,16 +32,29 @@ export const UserContext = React.createContext();
 
 export default function App() {
   const [route, setRoute] = useState(parseRoute(window.location.hash));
-  const user = null;
+  const [token, setToken] = useState(null);
+  const [isAuthorizing, setIsAuthorizing] = useState(true);
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
       setRoute(parseRoute(window.location.hash));
     });
+    if (window.localStorage.getItem('jwt-token')) setToken(window.localStorage.getItem('jwt-token')); else setToken(null);
+    setIsAuthorizing(false);
   }, []);
 
+  const handleSignIn = result => {
+    window.localStorage.setItem('jwt-token', result);
+    setToken(result);
+  };
+
+  const handleSignOut = result => {
+    window.localStorage.removeItem('jwt-token');
+    setToken(null);
+  };
+
   const renderPage = () => {
-    if (route.path === 'sign-up') {
+    if (route.path === 'sign-up' || route.path === 'sign-in') {
       return <SignUp />;
     }
     if (route.path === '') {
@@ -64,12 +77,15 @@ export default function App() {
     return <NotFound />;
   };
 
-  return (
+  if (isAuthorizing) return null;
+  else {
+    return (
     <ThemeProvider theme={theme}>
-      <Header route={route.path} />
-      <UserContext.Provider value={user}>
+      <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut }}>
+        <Header/>
         {renderPage()}
       </UserContext.Provider>
     </ThemeProvider>
-  );
+    );
+  }
 }

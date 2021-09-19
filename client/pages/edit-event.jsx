@@ -1,9 +1,10 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import EventForm from '../components/event-form';
 import { Container, Typography, makeStyles, Grid, Button, Dialog, Slide, DialogTitle, DialogActions } from '@material-ui/core';
 import BackButton from '../components/back-button';
 import { utcToZonedTime } from 'date-fns-tz';
 import format from 'date-fns/format';
+import { UserContext } from '../app';
 
 const useStyles = makeStyles(theme => (
   {
@@ -45,9 +46,10 @@ export default function EditEvent(props) {
   const classes = useStyles();
   const [editValues, setEditValues] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
+  const contextValues = useContext(UserContext);
 
   useEffect(() => {
-    fetch(`/api/events/${props.eventId}`)
+    fetch(`/api/events/${props.eventId}`, { headers: { authorization: contextValues.token } })
       .then(res => res.json())
       .then(result => {
         const { coords, description, destination, email, eventId, notification: on, origin, timestamp, title } = result;
@@ -69,13 +71,17 @@ export default function EditEvent(props) {
   };
 
   const handleDelete = () => {
-    fetch(`/api/events/${props.eventId}`, { method: 'DELETE' })
+    fetch(`/api/events/${props.eventId}`, { method: 'DELETE', headers: { authorization: contextValues.token } })
       .then(() => {
         window.location.hash = '#';
       })
       .catch(err => console.error(err));
   };
 
+  if (!contextValues.token) {
+    window.location.hash = '#sign-in';
+    return null;
+  }
   return (
     <>
       <main>

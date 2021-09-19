@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Container, Grid, IconButton, InputAdornment, TextField, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import SmallEventCard from '../components/small-event-card';
+import { UserContext } from '../app';
 
 const useStyles = makeStyles(theme => (
   {
@@ -49,6 +50,7 @@ export default function SearchPage() {
   const [keyword, setKeyword] = useState('');
   const [searched, setSearched] = useState(false);
   const [eventList, setEventList] = useState(null);
+  const contextValues = useContext(UserContext);
 
   const onChange = e => {
     setKeyword(e.target.value);
@@ -63,7 +65,7 @@ export default function SearchPage() {
       setEventList(null);
       return setSearched(false);
     }
-    fetch(`/api/search/${keyword}`)
+    fetch(`/api/search/${keyword}`, { headers: { authorization: contextValues.token } })
       .then(result => result.json())
       .then(result => {
         if (!result[0]) {
@@ -77,6 +79,10 @@ export default function SearchPage() {
 
   const classes = useStyles();
 
+  if (!contextValues.token) {
+    window.location.hash = '#sign-in';
+    return null;
+  }
   return (
     <>
     <main>
@@ -126,4 +132,5 @@ export default function SearchPage() {
     </main>
     </>
   );
+
 }

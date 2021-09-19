@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Grid, Typography } from '@material-ui/core';
+import { UserContext } from '../app';
 
 export default function NotFound() {
+  const contextValues = useContext(UserContext);
+  if (!contextValues.token) {
+    window.location.hash = '#sign-in';
+    return null;
+  }
   return (
     <Grid container direction='column' alignItems='center' justifyContent='center'>
       <Grid item>
@@ -18,4 +24,5 @@ export default function NotFound() {
       </Grid>
     </Grid>
   );
+
 }
