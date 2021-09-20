@@ -58,7 +58,9 @@ export default function EventForm(props) {
       setValues({ ...props.editValues });
       setMarker(props.editValues.destinationCoords);
       setDirOptions({ ...dirOptions, destination: props.editValues.destination, origin: props.editValues.origin });
-    } return () => {
+    }
+    contextValues.loading(false);
+    return () => {
       setValues(null);
       setMarker(null);
       setDirOptions(null);
@@ -167,6 +169,13 @@ export default function EventForm(props) {
     }
   };
 
+  if (contextValues.isLoading) {
+    return (
+      <Grid container justifyContent="center">
+        <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </Grid>
+    );
+  }
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <Grid container spacing={2} justifyContent='center'>

@@ -38,7 +38,10 @@ export default function Home(props) {
   useEffect(() => {
     fetch('/api/events', { headers: { authorization: contextValues.token } })
       .then(res => res.json())
-      .then(result => setEventList(result))
+      .then(result => {
+        setEventList(result);
+        contextValues.loading(false);
+      })
       .catch(err => console.error(err));
     return () => setEventList(null);
   }, []);
@@ -46,6 +49,13 @@ export default function Home(props) {
   if (!contextValues.token) {
     window.location.hash = '#sign-in';
     return null;
+  }
+  if (contextValues.isLoading) {
+    return (
+      <Grid container justifyContent="center">
+        <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </Grid>
+    );
   }
   return (
       <>

@@ -26,6 +26,7 @@ export default function CreateEvent(props) {
   const classes = useStyles();
   const matches = useMediaQuery('(min-width:500px)');
   const contextValues = useContext(UserContext);
+
   if (!contextValues.token) {
     window.location.hash = '#sign-in';
     return null;

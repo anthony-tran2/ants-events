@@ -73,6 +73,7 @@ export default function EventDetails(props) {
       .then(result => {
         setEvent(result);
         setDirOptions({ ...dirOptions, destination: result.destination, origin: result.origin });
+        contextValues.loading(false);
       });
   }, []);
 
@@ -83,6 +84,13 @@ export default function EventDetails(props) {
     return null;
   }
   if (!event) return null;
+  if (contextValues.isLoading) {
+    return (
+      <Grid container justifyContent="center">
+        <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </Grid>
+    );
+  }
   const { title, description, timestamp, origin, destination, notification, email } = event;
   const newTimestamp = timestampConversion(timestamp);
   return (

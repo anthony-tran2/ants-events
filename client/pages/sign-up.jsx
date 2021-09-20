@@ -39,6 +39,7 @@ export default function SignUp() {
           setUsernames(result);
         });
     }
+    contextValues.loading(false);
   }, []);
 
   const handleChange = e => {
@@ -86,6 +87,13 @@ export default function SignUp() {
     }
   };
 
+  if (contextValues.isLoading) {
+    return (
+  <Grid container justifyContent="center">
+    <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </Grid>
+    );
+  }
   return (
     <Container maxWidth="lg">
       <form onSubmit={handleSubmit}>

@@ -34,10 +34,12 @@ export default function App() {
   const [route, setRoute] = useState(parseRoute(window.location.hash));
   const [token, setToken] = useState(null);
   const [isAuthorizing, setIsAuthorizing] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
       setRoute(parseRoute(window.location.hash));
+      setIsLoading(true);
     });
     if (window.localStorage.getItem('jwt-token')) setToken(window.localStorage.getItem('jwt-token')); else setToken(null);
     setIsAuthorizing(false);
@@ -51,6 +53,10 @@ export default function App() {
   const handleSignOut = result => {
     window.localStorage.removeItem('jwt-token');
     setToken(null);
+  };
+
+  const loading = boolean => {
+    setIsLoading(boolean);
   };
 
   const renderPage = () => {
@@ -81,7 +87,7 @@ export default function App() {
   else {
     return (
     <ThemeProvider theme={theme}>
-      <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut }}>
+      <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut, isLoading, loading }}>
         <Header/>
         {renderPage()}
       </UserContext.Provider>
