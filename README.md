@@ -1,3 +1,3 @@
-# final-project
+# Ant's Events
 
-A full stack JavaScript solo project.
+A web application for forgetful people who want to keep track of their events.
