@@ -17,14 +17,12 @@ const sql = `
            "notification",
            "eventId"
       from "events"
-     where "userId" = $1 and
-     "sent" = false and
+     where "sent" = false and
      "notification" = true and
      EXTRACT(hour from age(timestamp, current_timestamp)) <= '06' and
 EXTRACT(hour from age(timestamp, current_timestamp)) >= '00';
   `;
-const params = [1];
-db.query(sql, params)
+db.query(sql)
   .then(result => {
     const { rows: eventList } = result;
     eventList.forEach(event => {
