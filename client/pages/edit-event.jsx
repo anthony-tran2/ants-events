@@ -57,6 +57,7 @@ export default function EditEvent(props) {
         const date = format(zonedDate, 'yyyy-MM-dd');
         const time = format(zonedDate, 'HH:mm');
         setEditValues({ originCoords: coords.originCoords, destinationCoords: coords.destinationCoords, description, destination, email, eventId, on, origin, title, date, time });
+        contextValues.loading(false);
         return () => { setEditValues({ originCoords: coords.originCoords, destinationCoords: coords.destinationCoords, description, destination, email, eventId, on, origin, title, date, time }); };
       })
       .catch(err => console.error(err));
@@ -81,6 +82,13 @@ export default function EditEvent(props) {
   if (!contextValues.token) {
     window.location.hash = '#sign-in';
     return null;
+  }
+  if (contextValues.isLoading) {
+    return (
+      <Grid container justifyContent="center">
+        <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </Grid>
+    );
   }
   return (
     <>

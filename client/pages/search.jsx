@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Container, Grid, IconButton, InputAdornment, TextField, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -52,6 +52,10 @@ export default function SearchPage() {
   const [eventList, setEventList] = useState(null);
   const contextValues = useContext(UserContext);
 
+  useEffect(() => {
+    contextValues.loading(false);
+  }, []);
+
   const onChange = e => {
     setKeyword(e.target.value);
   };
@@ -61,10 +65,12 @@ export default function SearchPage() {
   };
 
   const search = () => {
+    contextValues.loading(true);
     if (keyword === '') {
       setEventList(null);
       return setSearched(false);
     }
+    contextValues.loading(true);
     fetch(`/api/search/${keyword}`, { headers: { authorization: contextValues.token } })
       .then(result => result.json())
       .then(result => {
@@ -72,6 +78,7 @@ export default function SearchPage() {
           setEventList(null);
           return setSearched(false);
         }
+        contextValues.loading(false);
         setSearched(true);
         setEventList(result);
       });
@@ -82,6 +89,13 @@ export default function SearchPage() {
   if (!contextValues.token) {
     window.location.hash = '#sign-in';
     return null;
+  }
+  if (contextValues.isLoading) {
+    return (
+      <Grid container justifyContent="center">
+        <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </Grid>
+    );
   }
   return (
     <>

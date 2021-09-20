@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CreateEvent from './pages/create-event-page.jsx';
 import Home from './pages/home.jsx';
 import { ThemeProvider } from '@material-ui/styles';
-import { createTheme } from '@material-ui/core';
+import { createTheme, Typography, makeStyles } from '@material-ui/core';
 import Header from './components/toolbar';
 import parseRoute from './lib/parse-route.js';
 import NotFound from './pages/not-found.jsx';
@@ -28,16 +28,36 @@ const theme = createTheme({
   }
 });
 
+const useStyles = makeStyles(theme => (
+  {
+    heading: {
+      fontSize: '2.5rem',
+      fontWeight: '300',
+      marginTop: '2rem'
+    }
+  }
+));
+
 export const UserContext = React.createContext();
 
 export default function App() {
   const [route, setRoute] = useState(parseRoute(window.location.hash));
   const [token, setToken] = useState(null);
   const [isAuthorizing, setIsAuthorizing] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [networkError, setNetworkError] = useState(false);
+  const classes = useStyles();
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
       setRoute(parseRoute(window.location.hash));
+      if (route.path !== 'sign-up' || route.path !== 'sign-in') setIsLoading(false); else setIsLoading(true);
+    });
+    window.addEventListener('online', () => {
+      setNetworkError(false);
+    });
+    window.addEventListener('offline', () => {
+      setNetworkError(true);
     });
     if (window.localStorage.getItem('jwt-token')) setToken(window.localStorage.getItem('jwt-token')); else setToken(null);
     setIsAuthorizing(false);
@@ -51,6 +71,10 @@ export default function App() {
   const handleSignOut = result => {
     window.localStorage.removeItem('jwt-token');
     setToken(null);
+  };
+
+  const loading = boolean => {
+    setIsLoading(boolean);
   };
 
   const renderPage = () => {
@@ -78,14 +102,19 @@ export default function App() {
   };
 
   if (isAuthorizing) return null;
-  else {
+  if (networkError) {
     return (
-    <ThemeProvider theme={theme}>
-      <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut }}>
-        <Header/>
-        {renderPage()}
-      </UserContext.Provider>
-    </ThemeProvider>
+    <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading}>
+      Sorry there seems to have been a network error. Try again later!
+    </Typography>
     );
   }
+  return (
+  <ThemeProvider theme={theme}>
+    <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut, isLoading, loading }}>
+      <Header/>
+      {renderPage()}
+    </UserContext.Provider>
+  </ThemeProvider>
+  );
 }
