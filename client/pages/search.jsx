@@ -54,7 +54,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     contextValues.loading(false);
-  });
+  }, []);
 
   const onChange = e => {
     setKeyword(e.target.value);
@@ -65,6 +65,7 @@ export default function SearchPage() {
   };
 
   const search = () => {
+    contextValues.loading(true);
     if (keyword === '') {
       setEventList(null);
       return setSearched(false);
