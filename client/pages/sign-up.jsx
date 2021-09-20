@@ -32,12 +32,16 @@ export default function SignUp() {
   const { handleSignIn, route } = contextValues;
 
   useEffect(() => {
-    if (route.path === 'sign-up') {
-      fetch('/api/users/usernames')
-        .then(res => res.json())
-        .then(result => {
-          setUsernames(result);
-        });
+    fetch('/api/users/usernames')
+      .then(res => res.json())
+      .then(result => {
+        setUsernames(result);
+      });
+    if (route.path === 'sign-in') {
+      setAccount({
+        username: 'demouser',
+        password: 'password1'
+      });
     }
     contextValues.loading(false);
   }, []);
@@ -56,6 +60,13 @@ export default function SignUp() {
   const handleSubmit = e => {
     e.preventDefault();
     const { username, password } = account;
+    if (route.path === 'sign-up') {
+      for (let i = 0; i < usernames.length; i++) {
+        if (usernames[i].username === e.target.value || usernames[i].username === account.username) {
+          return setTaken(true);
+        } else setTaken(false);
+      }
+    }
     if (!username || !password || taken) return setError(true); else {
       setError(false);
       const init = {
@@ -79,8 +90,7 @@ export default function SignUp() {
             if (!result.error) {
               handleSignIn(result);
               window.location.hash = '#';
-            }
-            setError(true);
+            } else setError(true);
           }
         })
         .catch(err => console.error(err));
@@ -137,7 +147,7 @@ export default function SignUp() {
           />
       </Grid>
       <Grid item>
-        <a href={route.path === 'sign-in' ? '#sign-up' : '#sign-in'}>
+            <a style={{ textDecoration: 'underline', color: '#8AA29E' }} href={route.path === 'sign-in' ? '#sign-up' : '#sign-in'}>
           {route.path === 'sign-in' ? "Don't have an account? Register here." : 'Already have an account? Log in here.'}
         </a>
       </Grid>

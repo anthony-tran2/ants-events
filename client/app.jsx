@@ -39,7 +39,7 @@ export default function App() {
   useEffect(() => {
     window.addEventListener('hashchange', () => {
       setRoute(parseRoute(window.location.hash));
-      setIsLoading(true);
+      if (route.path !== 'sign-up' || route.path !== 'sign-in') setIsLoading(false); else setIsLoading(true);
     });
     if (window.localStorage.getItem('jwt-token')) setToken(window.localStorage.getItem('jwt-token')); else setToken(null);
     setIsAuthorizing(false);
