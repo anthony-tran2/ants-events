@@ -164,7 +164,7 @@ export default function EventForm(props) {
 
   const handleChange = e => {
     setValues({ ...values, [e.target.getAttribute('id')]: e.target.value });
-    if (e.target.value === '') {
+    if (e.target.value === '' && e.target.getAttribute('id') === 'destination') {
       setMarker(null);
     }
   };
