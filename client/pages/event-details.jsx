@@ -144,7 +144,7 @@ export default function EventDetails(props) {
                           </Grid>
                           {notification &&
                             <Typography className={classes.spacingtext} color="secondary">
-                              <span className={classes.bold}>Origin: </span><span>{email}</span>
+                              <span className={classes.bold}>Email: </span><span>{email}</span>
                             </Typography>}
                         </Grid>
                         <Grid item xs={12} sm={6}>
