@@ -13,8 +13,6 @@ const sql = `
            "origin",
            "destination",
            "email",
-           "sent",
-           "notification",
            "eventId"
       from "events"
      where "sent" = false and
