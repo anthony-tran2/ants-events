@@ -1,5 +1,4 @@
 import { Card, Grid, Typography, CardContent, Container, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import BackButton from '../components/back-button';
 import Map from '../components/map';
@@ -7,37 +6,6 @@ import timestampConversion from '../lib/date-and-time-conversion';
 import CheckIcon from '@material-ui/icons/Check';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import { UserContext } from '../app';
-
-const useStyles = makeStyles(theme => (
-  {
-    heading: {
-      fontSize: '1.7rem',
-      fontWeight: '300',
-      marginTop: '0.35em'
-    },
-
-    bold: {
-      fontWeight: '700'
-    },
-
-    card: {
-      height: '100%'
-    },
-
-    mapHeight: {
-      minHeight: '20rem'
-    },
-
-    spacingbutton: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
-    },
-
-    spacingtext: {
-      marginBottom: theme.spacing(2)
-    }
-  }
-));
 
 export default function EventDetails(props) {
   const [event, setEvent] = useState(null);
@@ -77,7 +45,7 @@ export default function EventDetails(props) {
       });
   }, []);
 
-  const classes = useStyles();
+  const { classes } = contextValues;
 
   if (!contextValues.token) {
     window.location.hash = '#sign-in';
@@ -111,7 +79,7 @@ export default function EventDetails(props) {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Card className={classes.card}>
+              <Card className={classes.cardDetails}>
                 <Grid container>
                   <Grid item xs={12}>
                     <CardContent>

@@ -1,40 +1,15 @@
 import React, { useContext, useState } from 'react';
-import { AppBar, CssBaseline, IconButton, makeStyles, Toolbar, Typography, ListItemIcon, ListItemText, MenuItem, Menu, Grid } from '@material-ui/core';
+import { AppBar, CssBaseline, IconButton, Toolbar, Typography, ListItemIcon, ListItemText, MenuItem, Menu, Grid } from '@material-ui/core';
 import TodayIcon from '@material-ui/icons/Today';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import { UserContext } from '../app';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
-const useStyles = makeStyles(theme => (
-  {
-    root: {
-      backgroundColor: '#FBDCE2',
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.black
-      }
-
-    },
-
-    paper: {
-      border: '1px solid #d3d4d5'
-    },
-
-    icon: {
-      padding: '0',
-      marginRight: theme.spacing(2)
-    },
-
-    white: {
-      color: 'white',
-      fontSize: '1.5em'
-    }
-  }));
-
 export default function Header(props) {
   const contextValues = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState(null);
-  const { route, handleSignOut, token } = contextValues;
+  const { route, handleSignOut, token, classes } = contextValues;
 
   const handleClick = e => {
     setAnchorEl(e.currentTarget);
@@ -44,7 +19,6 @@ export default function Header(props) {
     setAnchorEl(null);
   };
 
-  const classes = useStyles();
   return (
     <>
     <CssBaseline/>
@@ -81,7 +55,7 @@ export default function Header(props) {
                 }}
                 value={route.path}
               >
-                <MenuItem onClick={handleClose} className={route.path === '' ? classes.root : ''}>
+              <MenuItem onClick={handleClose} className={route.path === '' ? `${classes.menuRoot} ${classes.pink}` : ''}>
                   <a href='#'>
                     <Grid container alignItems='center'>
                   <ListItemIcon>
@@ -91,7 +65,7 @@ export default function Header(props) {
                   </Grid>
                   </a>
                 </MenuItem>
-                <MenuItem onClick={handleClose} className={route.path === 'search' ? classes.root : ''}>
+              <MenuItem onClick={handleClose} className={route.path === 'search' ? `${classes.menuRoot} ${classes.pink}` : ''}>
                   <a href='#search'>
                     <Grid container alignItems='center'>
                       <ListItemIcon>

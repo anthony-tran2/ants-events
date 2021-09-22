@@ -1,52 +1,20 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import EventForm from '../components/event-form';
-import { Container, Typography, makeStyles, Grid, Button, Dialog, Slide, DialogTitle, DialogActions } from '@material-ui/core';
+import { Container, Typography, Grid, Button, Dialog, Slide, DialogTitle, DialogActions } from '@material-ui/core';
 import BackButton from '../components/back-button';
 import { utcToZonedTime } from 'date-fns-tz';
 import format from 'date-fns/format';
 import { UserContext } from '../app';
-
-const useStyles = makeStyles(theme => (
-  {
-    modal: {
-      height: '20rem'
-    },
-
-    absolute: {
-      position: 'absolute'
-    },
-
-    height: {
-      height: '2.5rem'
-    },
-
-    spacingbutton: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
-    },
-
-    redButton: {
-      backgroundColor: '#DB5461',
-      color: '#fff'
-    },
-
-    modalButtons: {
-      height: '3rem',
-      width: '7rem',
-      fontSize: '1.2rem'
-    }
-  }
-));
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function EditEvent(props) {
-  const classes = useStyles();
   const [editValues, setEditValues] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const contextValues = useContext(UserContext);
+  const { classes } = contextValues;
 
   useEffect(() => {
     fetch(`/api/events/${props.eventId}`, { headers: { authorization: contextValues.token } })
@@ -95,7 +63,7 @@ export default function EditEvent(props) {
       <main>
         <Container maxWidth="lg" >
           <Grid container justifyContent='center'>
-            <Grid item container className={classes.spacingbutton} justifyContent="space-between">
+            <Grid item container className={`${classes.height}`} justifyContent="space-between" alignContent="center">
               <Grid item>
                 <BackButton/>
               </Grid>

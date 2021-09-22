@@ -1,19 +1,11 @@
-import { Grid, makeStyles, TextField } from '@material-ui/core';
+import { Grid, TextField } from '@material-ui/core';
 import { format } from 'date-fns';
-import React from 'react';
-
-const useStyles = makeStyles(theme => (
-  {
-    root: {
-      '& .MuiOutlinedInput-root': {
-        borderRadius: '8px'
-      }
-    }
-  }
-));
+import React, { useContext } from 'react';
+import { UserContext } from '../app';
 
 export default function FormInput(props) {
-  const classes = useStyles();
+  const contextValues = useContext(UserContext);
+  const { classes } = contextValues;
 
   const selectType = () => {
     if (props.id === 'date') {

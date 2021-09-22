@@ -30,10 +30,131 @@ const theme = createTheme({
 
 const useStyles = makeStyles(theme => (
   {
+    root: {
+      '& .MuiOutlinedInput-root': {
+        borderRadius: '8px'
+      },
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.black
+      }
+    },
+
     heading: {
       fontSize: '2.5rem',
       fontWeight: '300',
-      marginTop: '2rem'
+      marginTop: '0.35rem'
+    },
+
+    cardgrid: {
+      paddingTop: theme.spacing(4),
+      paddingBottom: theme.spacing(4)
+    },
+
+    card: {
+      height: '11rem',
+      display: 'flex',
+      flexDirection: 'column'
+    },
+
+    cardContent: {
+      flexGrow: 1,
+      maxHeight: '8rem'
+    },
+
+    ellipsis: {
+      color: '#3D5467',
+      fontSize: '1rem',
+      fontWeight: '400',
+      lineHeight: '1.5',
+      letterSpacing: '0.00938rem'
+    },
+
+    bold: {
+      fontWeight: '700'
+    },
+
+    cardDetails: {
+      height: '100%'
+    },
+
+    mapHeight: {
+      minHeight: '20rem'
+    },
+
+    spacingbutton: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    },
+
+    spacingtext: {
+      marginBottom: theme.spacing(2)
+    },
+
+    modal: {
+      height: '20rem'
+    },
+
+    absolute: {
+      position: 'absolute'
+    },
+
+    height: {
+      height: '2.5rem'
+    },
+
+    redButton: {
+      backgroundColor: '#DB5461',
+      color: '#fff'
+    },
+
+    modalButtons: {
+      height: '3rem',
+      width: '7rem',
+      fontSize: '1.2rem'
+    },
+
+    pink: {
+      backgroundColor: '#FBDCE2'
+    },
+
+    paper: {
+      border: '1px solid #d3d4d5'
+    },
+
+    icon: {
+      padding: '0',
+      marginRight: theme.spacing(2)
+    },
+
+    white: {
+      color: 'white',
+      fontSize: '1.5em'
+    },
+
+    smallcard: {
+      height: '11rem'
+    },
+
+    smallCardContent: {
+      height: '7.25rem'
+    },
+
+    smallEllipsis: {
+      color: '#3D5467',
+      fontSize: '1rem',
+      fontWeight: '400'
+    },
+
+    switch: {
+      height: '3.5rem'
+    },
+
+    height25: {
+      height: '25rem'
+    },
+
+    height20: {
+      height: '20rem'
     }
   }
 ));
@@ -111,7 +232,7 @@ export default function App() {
   }
   return (
   <ThemeProvider theme={theme}>
-    <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut, isLoading, loading }}>
+    <UserContext.Provider value={{ token, route, handleSignIn, handleSignOut, isLoading, loading, classes }}>
       <Header/>
       {renderPage()}
     </UserContext.Provider>

@@ -1,39 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Container, Button, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import SmallEventCard from '../components/small-event-card';
 import { UserContext } from '../app';
 
-const useStyles = makeStyles(theme => (
-  {
-    heading: {
-      fontSize: '2.5rem',
-      fontWeight: '300',
-      marginTop: '0.35em'
-    },
-
-    cardgrid: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(4)
-    },
-
-    card: {
-      height: '11rem',
-      display: 'flex',
-      flexDirection: 'column'
-    },
-
-    cardContent: {
-      flexGrow: 1,
-      maxHeight: '8rem'
-    }
-  }
-));
-
 export default function Home(props) {
   const [eventList, setEventList] = useState(null);
-  const classes = useStyles();
   const contextValues = useContext(UserContext);
+  const { classes } = contextValues;
 
   useEffect(() => {
     fetch('/api/events', { headers: { authorization: contextValues.token } })
