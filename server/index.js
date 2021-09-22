@@ -6,7 +6,7 @@ const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
-const authorizationMiddleware = require('./authorizationMiddleware.js');
+const authorizationMiddleware = require('./authorization-middleware.js');
 
 const app = express();
 const jsonMiddleware = express.json();

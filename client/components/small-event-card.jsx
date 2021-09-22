@@ -1,37 +1,20 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React, { useContext } from 'react';
 import { Button, Grid, Typography, Card, CardContent, CardActions } from '@material-ui/core';
 import LinesEllipsis from 'react-lines-ellipsis';
-
-const useStyles = makeStyles(theme => (
-  {
-    card: {
-      height: '11rem'
-    },
-
-    cardContent: {
-      height: '7.25rem'
-    },
-
-    ellipsis: {
-      color: theme.palette.primary.main,
-      fontSize: '1rem',
-      fontWeight: '400'
-    }
-  }
-));
+import { UserContext } from '../app';
 
 export default function SmallEventCard(props) {
-  const classes = useStyles();
+  const contextValues = useContext(UserContext);
+  const { classes } = contextValues;
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card className={classes.card}>
-        <CardContent className={classes.cardContent}>
+      <Card className={classes.smallcard}>
+        <CardContent className={classes.smallCardContent}>
           <Typography gutterBottom variant="h5" component="h2">
             {props.title}
           </Typography>
           <LinesEllipsis
-            className={classes.ellipsis}
+            className={classes.smallEllipsis}
             text={props.description}
             maxLine='2'
             ellipsis='...'

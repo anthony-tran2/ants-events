@@ -1,49 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
 import { Container, Grid, IconButton, InputAdornment, TextField, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import SmallEventCard from '../components/small-event-card';
 import { UserContext } from '../app';
-
-const useStyles = makeStyles(theme => (
-  {
-    root: {
-      '& .MuiOutlinedInput-root': {
-        borderRadius: '8px'
-      }
-    },
-
-    heading: {
-      fontSize: '2.5rem',
-      fontWeight: '300',
-      marginTop: '0.35em'
-    },
-
-    cardgrid: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(4)
-    },
-
-    card: {
-      height: '11rem',
-      display: 'flex',
-      flexDirection: 'column'
-    },
-
-    cardContent: {
-      flexGrow: 1,
-      maxHeight: '8rem'
-    },
-
-    ellipsis: {
-      color: theme.palette.primary.main,
-      fontSize: '1rem',
-      fontWeight: '400',
-      lineHeight: '1.5',
-      letterSpacing: '0.00938rem'
-    }
-  }
-));
 
 export default function SearchPage() {
 
@@ -84,7 +43,7 @@ export default function SearchPage() {
       });
   };
 
-  const classes = useStyles();
+  const { classes } = contextValues;
 
   if (!contextValues.token) {
     window.location.hash = '#sign-in';

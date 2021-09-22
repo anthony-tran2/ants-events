@@ -1,31 +1,13 @@
 import React, { useContext } from 'react';
 import EventForm from '../components/event-form';
-import { Container, Typography, makeStyles, Grid, useMediaQuery } from '@material-ui/core';
+import { Container, Typography, Grid, useMediaQuery } from '@material-ui/core';
 import BackButton from '../components/back-button';
 import { UserContext } from '../app';
 
-const useStyles = makeStyles(theme => (
-  {
-    heading: {
-      fontSize: '2.5rem',
-      fontWeight: '300',
-      marginTop: '0.35em'
-    },
-
-    absolute: {
-      position: 'absolute'
-    },
-
-    height: {
-      height: '2.5rem'
-    }
-  }
-));
-
 export default function CreateEvent(props) {
-  const classes = useStyles();
   const matches = useMediaQuery('(min-width:500px)');
   const contextValues = useContext(UserContext);
+  const { classes } = contextValues;
 
   if (!contextValues.token) {
     window.location.hash = '#sign-in';

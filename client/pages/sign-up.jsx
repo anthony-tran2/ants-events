@@ -1,26 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Grid, TextField, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import { UserContext } from '../app';
 
-const useStyles = makeStyles(theme => (
-  {
-    root: {
-      '& .MuiOutlinedInput-root': {
-        borderRadius: '8px'
-      }
-    },
-
-    heading: {
-      fontSize: '2.5rem',
-      fontWeight: '300',
-      marginTop: '2rem'
-    }
-  }
-));
-
 export default function SignUp() {
-  const classes = useStyles();
   const [account, setAccount] = useState({
     username: '',
     password: ''
@@ -30,6 +12,7 @@ export default function SignUp() {
   const [taken, setTaken] = useState(false);
   const contextValues = useContext(UserContext);
   const { handleSignIn, route } = contextValues;
+  const { classes } = contextValues;
 
   useEffect(() => {
     fetch('/api/users/usernames')
@@ -106,11 +89,11 @@ export default function SignUp() {
   }
   return (
     <Container maxWidth="lg">
-      <form onSubmit={handleSubmit}>
-      <Grid container spacing={4} direction="column" alignItems="center" justifyContent="center">
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading}>
           {route.path === 'sign-in' ? 'SIGN IN' : 'SIGN UP'}
         </Typography>
+      <form onSubmit={handleSubmit}>
+      <Grid container spacing={4} direction="column" alignItems="center" justifyContent="center">
           {(error && route.path === 'sign-up') &&
               <Typography align='center' style={{ color: '#DB5461' }}>Invalid username and password are required! Try again.</Typography>}
           {(error && route.path === 'sign-in') &&

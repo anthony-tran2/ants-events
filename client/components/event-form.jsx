@@ -1,24 +1,10 @@
-import { Button, FormControlLabel, Grid, Switch, makeStyles, Typography } from '@material-ui/core';
+import { Button, FormControlLabel, Grid, Switch, Typography } from '@material-ui/core';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
 import AutocompleteComponent from './autocomplete.jsx';
 import { zonedTimeToUtc } from 'date-fns-tz';
 import { UserContext } from '../app.jsx';
-
-const useStyles = makeStyles(theme => ({
-  switch: {
-    height: '3.5rem'
-  },
-
-  height: {
-    height: '25rem'
-  },
-
-  height2: {
-    height: '20rem'
-  }
-}));
 
 export default function EventForm(props) {
   const [values, setValues] = useState(
@@ -50,8 +36,8 @@ export default function EventForm(props) {
     }
   );
   const [dirRes, setDirRes] = useState(null);
-  const classes = useStyles();
   const contextValues = useContext(UserContext);
+  const { classes } = contextValues;
 
   useEffect(() => {
     if (props.editValues) {
@@ -192,7 +178,7 @@ export default function EventForm(props) {
           <AutocompleteComponent handlePlaceChanged={handlePlaceChanged} handleChange={handleChange} id="destination" value={values.destination} />
         </Grid>
         <Grid item container alignContent="space-between" spacing={3} xs={12} sm={6}>
-          <Grid item xs={12} className={values.on ? classes.height2 : classes.height}>
+          <Grid item xs={12} className={values.on ? classes.height20 : classes.height25}>
             <Map marker={marker} center={center} handleLoad={handleMapLoad} dirOptions={dirOptions} dirRes={dirRes} directionsCallback={directionsCallback}/>
           </Grid>
           <Grid item xs={12}>
