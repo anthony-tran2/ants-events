@@ -21,7 +21,7 @@ https://user-images.githubusercontent.com/85326711/134959012-cc7b78a2-6e78-4908-
 * Email notifications were sent to users via the **SendGrid v3 Web API**  
 * Directions and markers were displayed on a map using the **Google Maps JavaScript API**  
                 
-## Features:  
+## Features  
 * User can can create an event  
 * User can view their events  
 * User can search through their events  
@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/85326711/134959012-cc7b78a2-6e78-4908-
 * User can register for an account  
 * User can sign in and out of their accounts  
 
-## Future Features:
+## Future Features
 * User can create notes
 * User can view and edit their notes
 * User can delete their notes
