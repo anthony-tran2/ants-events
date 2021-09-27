@@ -27,17 +27,18 @@ export default function SearchPage() {
     contextValues.loading(true);
     if (keyword === '') {
       setEventList(null);
+      contextValues.loading(false);
       return setSearched(false);
     }
     contextValues.loading(true);
     fetch(`/api/search/${keyword}`, { headers: { authorization: contextValues.token } })
       .then(result => result.json())
       .then(result => {
+        contextValues.loading(false);
         if (!result[0]) {
           setEventList(null);
           return setSearched(false);
         }
-        contextValues.loading(false);
         setSearched(true);
         setEventList(result);
       });
