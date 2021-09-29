@@ -88,30 +88,30 @@ export default function EventDetails(props) {
                           <Typography component="h1" variant="h6" align="center" className={classes.heading} color="textPrimary" gutterBottom>
                           {title}
                           </Typography>
-                          <Typography className={classes.spacingtext} color="secondary">
+                          <Typography className={classes.spacingtext} color="primary">
                             {description}
                           </Typography>
-                          <Typography className={classes.spacingtext} color="secondary">
+                          <Typography className={classes.spacingtext} color="primary">
                               <span className={classes.bold}>Date: </span><span>{newTimestamp.date}</span>
                           </Typography>
-                          <Typography className={classes.spacingtext} color="secondary">
+                          <Typography className={classes.spacingtext} color="primary">
                             <span className={classes.bold}>Time: </span><span>{newTimestamp.time}</span>
                           </Typography>
                           {origin &&
-                          <Typography className={classes.spacingtext} color="secondary">
+                          <Typography className={classes.spacingtext} color="primary">
                             <span className={classes.bold}>Origin: </span><span>{origin}</span>
                           </Typography>}
-                          <Typography className={classes.spacingtext} color="secondary">
+                          <Typography className={classes.spacingtext} color="primary">
                             <span className={classes.bold}>Destination: </span><span>{destination}</span>
                           </Typography>
                           <Grid item container className={classes.spacingtext}>
-                              <Typography color="secondary">
+                              <Typography color="primary">
                                 <span className={classes.bold}>Opted in for notification</span>
                               </Typography>
                             {notification ? <CheckIcon style={{ color: '#2EF72E' }} /> : <NotInterestedIcon style={{ color: '#DB5461' }}/>}
                           </Grid>
                           {notification &&
-                            <Typography className={classes.spacingtext} color="secondary">
+                            <Typography className={classes.spacingtext} color="primary">
                               <span className={classes.bold}>Email: </span><span>{email}</span>
                             </Typography>}
                         </Grid>
