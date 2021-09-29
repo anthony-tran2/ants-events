@@ -6,11 +6,14 @@ I built this application because I am a very forgetful person so I wanted to bui
 
 [Live Demo](https://ants-events.herokuapp.com/)  
 
-https://user-images.githubusercontent.com/85326711/134958997-4a313dbf-3655-443a-a9de-34af8e6cbefb.mp4
-
-https://user-images.githubusercontent.com/85326711/134959012-cc7b78a2-6e78-4908-a331-b5e886b3d1cb.mp4
-
-![Screen Shot 2021-09-27 at 11 10 17 AM](https://user-images.githubusercontent.com/85326711/134962456-c295dae0-6317-4227-8724-1261530d8ea1.png)
+### Logging In and Creating an Event  
+https://user-images.githubusercontent.com/85326711/135320135-0dd33ae4-8769-4a9a-a13f-b15823e1b194.mov
+### Viewing, Editing, and Deleting Events  
+https://user-images.githubusercontent.com/85326711/135320161-433d32d0-2e5b-4ce1-8c45-1c0c724c086d.mov
+### Searching Events and Account Registration
+https://user-images.githubusercontent.com/85326711/135320167-92004c32-7074-4edf-9f05-19522ce02158.mov
+### Example Email Notification
+![Screen Shot 2021-09-29 at 10 27 06 AM](https://user-images.githubusercontent.com/85326711/135320514-1be9ce43-416f-4f04-9566-94361da85b98.png)
 
 ## Technologies Used  
 * The front-end client was built using **React** and **Material UI**  
