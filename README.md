@@ -2,7 +2,7 @@
 
 A web application for forgetful people who want to keep track of their events.  
 
-I built this application because I am a very forgetful person so I wanted to build an app that helps me keep track of all the events I have going on in my life. It would be a real pain though to have to go to the application all the time to check when your events are so in accordance to one of the three greate virtues of a good programmer, laziness, I set up automatic email notifications that the user can opt in to if they so desire.  
+I built this application because I am a very forgetful person so I wanted to build an app that helps me keep track of all the events I have going on in my life. It would be a real pain though to have to go to the application all the time to check when your events are so in accordance to one of the three great virtues of a good programmer, laziness, I set up automatic email notifications that the user can opt into if they so desire.  
 
 [Live Demo](https://ants-events.herokuapp.com/)  
 
@@ -19,13 +19,13 @@ https://user-images.githubusercontent.com/85326711/135320167-92004c32-7074-4edf-
 * The front-end client was built using **React** and **Material UI**  
 * The client communicates with the server through **fetch** requests  
 * The server was set up using **Node.js** and **Express**  
-* Registration, Authentication, and Authorzation was performed via **Argon2** and **JSON Web Tokens**  
+* Registration, Authentication, and Authorization was performed via **Argon2** and **JSON Web Tokens**  
 * A **PostgreSQL** database was used to store users and their event data  
 * Email notifications were sent to users via the **SendGrid v3 Web API**  
 * Directions and markers were displayed on a map using the **Google Maps JavaScript API**  
                 
 ## Features  
-* User can can create an event  
+* User can create an event  
 * User can view their events  
 * User can search through their events  
 * User can get email notifications for their events  
