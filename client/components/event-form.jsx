@@ -142,6 +142,7 @@ export default function EventForm(props) {
               travelMode: 'DRIVING'
             });
             setDirRes(null);
+            window.location.hash = '#';
           }
         })
         .catch(err => console.error(err));
