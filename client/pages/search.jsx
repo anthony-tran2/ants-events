@@ -23,7 +23,8 @@ export default function SearchPage() {
     e.preventDefault();
   };
 
-  const search = () => {
+  const search = e => {
+    e.preventDefault();
     contextValues.loading(true);
     if (keyword === '') {
       setEventList(null);
@@ -66,31 +67,33 @@ export default function SearchPage() {
         </Typography>
           <Grid container justifyContent='center'>
             <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete='off'
-                type='text'
-                onChange={onChange}
-                fullWidth
-                variant="outlined"
-                color="secondary"
-                id='search'
-                value={keyword}
-                className={classes.root}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                        <IconButton
-                          aria-label="search submit"
-                          onClick={search}
-                          onMouseDown={handleMouseDown}
-                          edge="end"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
+              <form onSubmit={search}>
+                <TextField
+                  autoComplete='off'
+                  type='text'
+                  onChange={onChange}
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  id='search'
+                  value={keyword}
+                  className={classes.root}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                          <IconButton
+                            aria-label="search submit"
+                            onMouseDown={handleMouseDown}
+                            edge="end"
+                            type="submit"
+                          >
+                            <SearchIcon />
+                          </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              </form>
             </Grid>
           </Grid>
           {eventList &&

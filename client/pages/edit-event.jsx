@@ -63,7 +63,7 @@ export default function EditEvent(props) {
       <main>
         <Container maxWidth="lg" >
           <Grid container justifyContent='center'>
-            <Grid item container className={`${classes.height}`} justifyContent="space-between" alignContent="center">
+            <Grid item container className={classes.spacingbutton} justifyContent="space-between" alignContent="center">
               <Grid item>
                 <BackButton/>
               </Grid>
@@ -110,7 +110,7 @@ export default function EditEvent(props) {
               </Grid>
             </Grid>
           </Dialog>
-          <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading}>
+          <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading} style={{ marginTop: 0 }}>
             Edit An Event
           </Typography>
           {editValues &&
