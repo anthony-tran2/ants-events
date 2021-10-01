@@ -20,14 +20,22 @@ export default function SignUp() {
       .then(result => {
         setUsernames(result);
       });
+    contextValues.loading(false);
+  }, []);
+
+  useEffect(() => {
     if (route.path === 'sign-in') {
       setAccount({
         username: 'demouser',
         password: 'password1'
       });
+    } else if (route.path === 'sign-up') {
+      setAccount({
+        username: '',
+        password: ''
+      });
     }
-    contextValues.loading(false);
-  }, []);
+  }, [route.path]);
 
   const handleChange = e => {
     setAccount({ ...account, [e.target.getAttribute('id')]: e.target.value });
