@@ -32,7 +32,12 @@ CREATE TABLE "public"."events" (
   OIDS=FALSE
 );
 
-
+CREATE TABLE "public"."firstTime" (
+	"userId" integer,
+  "firstTime" BOOLEAN NOT NULL
+) WITH (
+  OIDS=FALSE
+);
 
 CREATE TABLE "public"."notes" (
 	"noteId" serial NOT NULL,
@@ -47,3 +52,5 @@ CREATE TABLE "public"."notes" (
 ALTER TABLE "events" ADD CONSTRAINT "events_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 
 ALTER TABLE "notes" ADD CONSTRAINT "notes_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
+
+ALTER TABLE "firstTime" ADD CONSTRAINT "firstTime_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");

@@ -1,6 +1,9 @@
 insert into "users" ("username", "hashedPassword")
 values ('demouser', '$argon2i$v=19$m=4096,t=3,p=1$h7icQD/xZr8akZsX+hNA0A$h68atJWyjvunAwNOpSpMfg9sPvoMQ6dKwoh0dJhurWA');
 
+insert into "firstTime" ("userId", "firstTime")
+values(1, 'true');
+
 insert into "events" ("title", "description", "timestamp", "origin", "destination", "notification", "sent", "email", "userId", "coords")
 values ('Coding Bootcamp',
 'I have been going here every day for the past two and a half months to learn how to code.',
