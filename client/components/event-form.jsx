@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Grid, Switch, Typography } from '@material-ui/core';
+import { Button, FormControlLabel, Grid, Popover, Switch, Typography } from '@material-ui/core';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import FormInput from './text-field.jsx';
 import Map from './map.jsx';
@@ -37,6 +37,7 @@ export default function EventForm(props) {
   );
   const [dirRes, setDirRes] = useState(null);
   const contextValues = useContext(UserContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const { classes } = contextValues;
 
   useEffect(() => {
@@ -156,6 +157,14 @@ export default function EventForm(props) {
     }
   };
 
+  const handlePopover = e => {
+    anchorEl ? setAnchorEl(null) : setAnchorEl(e.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
   if (contextValues.isLoading) {
     return (
       <Grid container justifyContent="center">
@@ -187,7 +196,32 @@ export default function EventForm(props) {
               control={<Switch checked={values.on} onChange={() => setValues({ ...values, on: !values.on })} />}
               label="Email Notification"
               labelPlacement="start"
+              aria-owns={open ? 'mouse-over-popover' : undefined}
+              aria-haspopup="true"
+              onMouseEnter={handlePopover}
+              onMouseLeave={handlePopoverClose}
             />
+            <Popover
+              id="mouse-over-popover"
+              className={classes.popover}
+              classes={{
+                paper: classes.poppaper
+              }}
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left'
+              }}
+              transformOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+              onClose={handlePopoverClose}
+              disableRestoreFocus
+            >
+              <Typography>Get an email notification for your event when it is a maximum of 6 hours away from the current time.</Typography>
+            </Popover>
           </Grid>
           {values.on &&
             <Grid item xs={12}>

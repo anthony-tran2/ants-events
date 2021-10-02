@@ -155,6 +155,14 @@ const useStyles = makeStyles(theme => (
 
     height20: {
       height: '20rem'
+    },
+
+    popover: {
+      pointerEvents: 'none'
+    },
+
+    poppaper: {
+      padding: theme.spacing(1)
     }
   }
 ));
