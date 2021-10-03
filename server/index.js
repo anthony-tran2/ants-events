@@ -31,6 +31,15 @@ app.post('/api/auth/sign-up', (req, res, next) => {
       return db.query(sql, params);
     })
     .then(result => {
+      const sql = `
+        insert into "firstTime" ("userId", "firstTime")
+        values ($1, $2)
+      `;
+      const params = [result.rows[0].userId, true];
+      db.query(sql, params);
+      return result;
+    })
+    .then(result => {
       res.status(201).json(result.rows[0]);
     })
     .catch(err => next(err));
