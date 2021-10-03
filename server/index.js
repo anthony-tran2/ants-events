@@ -241,6 +241,21 @@ app.delete('/api/events/:eventId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/users/firstTime', (req, res, next) => {
+  const { userId } = req.user;
+  const sql = `
+       select "firstTime"
+       from "firstTime"
+     where "userId" = $1
+  `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      res.status(200).json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
