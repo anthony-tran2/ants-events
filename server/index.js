@@ -256,6 +256,23 @@ app.get('/api/users/firstTime', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.patch('/api/users/firstTime', (req, res, next) => {
+  const { userId } = req.user;
+  const sql = `
+       update "firstTime"
+       set "firstTime" = $1
+       where "userId" = $2
+    returning *;
+  `;
+  const params = [false, userId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) { throw new ClientError(404, 'invalid userId. try again.'); }
+      res.status(200).json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
