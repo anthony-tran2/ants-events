@@ -55,40 +55,40 @@ export default function Header(props) {
                 }}
                 value={route.path}
               >
-              <MenuItem onClick={handleClose} className={route.path === '' ? `${classes.menuRoot} ${classes.pink}` : ''}>
-                  <a href='#'>
+                <a href='#'>
+                  <MenuItem onClick={handleClose} className={route.path === '' ? `${classes.menuRoot} ${classes.pink}` : ''}>
                     <Grid container alignItems='center'>
-                  <ListItemIcon>
-                    <TodayIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText primary="Events" />
-                  </Grid>
-                  </a>
-                </MenuItem>
-              <MenuItem onClick={handleClose} className={route.path === 'search' ? `${classes.menuRoot} ${classes.pink}` : ''}>
-                  <a href='#search'>
+                      <ListItemIcon>
+                        <TodayIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText primary="Events" />
+                    </Grid>
+                  </MenuItem>
+                </a>
+                <a href='#search'>
+                  <MenuItem onClick={handleClose} className={route.path === 'search' ? `${classes.menuRoot} ${classes.pink}` : ''}>
                     <Grid container alignItems='center'>
                       <ListItemIcon>
                         <SearchIcon fontSize="small" />
                       </ListItemIcon>
                       <ListItemText primary="Search" />
                     </Grid>
-                  </a>
-                </MenuItem>
+                  </MenuItem>
+                </a>
                 {token &&
-                  <MenuItem onClick={() => {
-                    handleClose();
-                    handleSignOut();
-                  }}>
-                    <a href='#sign-in'>
+                  <a href='#sign-in'>
+                    <MenuItem onClick={() => {
+                      handleClose();
+                      handleSignOut();
+                    }}>
                       <Grid container alignItems='center'>
                         <ListItemIcon>
                           <ExitToAppIcon fontSize="small" />
                         </ListItemIcon>
                         <ListItemText primary="Logout" />
                       </Grid>
-                    </a>
-                </MenuItem>}
+                  </MenuItem>
+                  </a>}
               </Menu>
               <a href='#'>
               <Typography variant="h4" color="inherit" noWrap>
