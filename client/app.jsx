@@ -163,6 +163,15 @@ const useStyles = makeStyles(theme => (
 
     poppaper: {
       padding: theme.spacing(1)
+    },
+
+    firstTimeModal: {
+      maxHeight: '40rem',
+      height: '100%'
+    },
+
+    padding1: {
+      padding: '1rem'
     }
   }
 ));
