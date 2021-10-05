@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Container, Button, Grid, Typography } from '@material-ui/core';
 import SmallEventCard from '../components/small-event-card';
 import { UserContext } from '../app';
+import FirstTime from '../components/first-time';
 
 export default function Home(props) {
   const [eventList, setEventList] = useState(null);
@@ -34,6 +35,7 @@ export default function Home(props) {
       <>
       <main>
         <Container maxWidth="lg" >
+          <FirstTime />
           <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom className={classes.heading}>
             Your Events
           </Typography>
